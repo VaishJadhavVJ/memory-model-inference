@@ -1,0 +1,5 @@
+"SC"
+include "cos.cat"
+
+(* One global order: po, rf, co and fr must all agree *)
+acyclic po | rf | co | fr as sc

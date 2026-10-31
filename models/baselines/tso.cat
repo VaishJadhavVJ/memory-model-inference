@@ -1,0 +1,10 @@
+"TSO"
+include "cos.cat"
+
+let com = rf | co | fr
+acyclic po-loc | com as uniproc
+
+(* Program order minus W->R (the store buffer may delay a write past a later read) *)
+let ppo = (po & (W * W)) | (po & (R * R)) | (po & (R * W))
+(* rfe, not rf: a thread may read its own buffered write early (store forwarding) *)
+acyclic ppo | rfe | co | fr as global

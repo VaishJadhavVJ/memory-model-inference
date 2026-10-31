@@ -1,0 +1,10 @@
+"SRA"
+include "cos.cat"
+
+(* Same as ra.cat (copied: herd7 does not look for includes next to the model file) *)
+let hb = (po | rf)+
+acyclic hb as hb-acyclic
+irreflexive hb ; (rf | co | fr)+ as coherence
+
+(* Strong RA: writes are also ordered consistently with hb *)
+acyclic po | rf | co as sra

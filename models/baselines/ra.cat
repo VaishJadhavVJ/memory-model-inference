@@ -1,0 +1,8 @@
+"RA"
+include "cos.cat"
+
+(* happens-before: program order and reads-from, chained *)
+let hb = (po | rf)+
+acyclic hb as hb-acyclic
+(* Nothing hb-before an event may observe a write that is hb-after it (per location) *)
+irreflexive hb ; (rf | co | fr)+ as coherence

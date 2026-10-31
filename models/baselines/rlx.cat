@@ -1,0 +1,5 @@
+"RLX"
+include "cos.cat"
+
+(* Coherence only: each location on its own behaves like SC *)
+acyclic po-loc | rf | co | fr as coherence
