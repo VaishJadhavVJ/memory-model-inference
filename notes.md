@@ -30,3 +30,14 @@ Contrast (herd's built-in `sc.cat`, not our own baseline yet): `herd7 -model sc.
 
 Note to self: the first output line `Test SB Allowed` only says the test uses `exists`
 (it asks "is this allowed?"); it is NOT the verdict. The verdict is `Ok`/`No` and the Observation line.
+
+## 2026-10-31 — GitHub repo
+
+- `gh auth status`: logged in as VaishJadhavVJ (scopes include `repo`).
+- Checked what litmus7 generates (`litmus7 -o <dir> tests/SB.litmus`, then `make`): C sources,
+  Makefile, run.sh, plus `*.exe`, `*.o`, `*.t` after compiling. Convention: litmus7 output goes in
+  `build/`, which is gitignored along with `*.exe`, `*.o`, `*.t`, `.DS_Store`, Python caches.
+  Verified with `git check-ignore` that .litmus, .cat, .py, .csv, logs and notes.md stay tracked.
+- Added README.md.
+- `gh repo create memory-model-inference --private --source=. --push`
+  → https://github.com/VaishJadhavVJ/memory-model-inference (private)

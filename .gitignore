@@ -1,2 +1,12 @@
+# Python caches
 __pycache__/
 *.py[cod]
+
+# macOS
+.DS_Store
+
+# litmus7 output: generate into build/ (litmus7 -o build/<name> tests/X.litmus)
+build/
+*.exe
+*.o
+*.t
