@@ -1,0 +1,15 @@
+AArch64 CoRW
+"Rfe PosRW Coe"
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=Rfe PosRW Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: [x]=1 /\ 1:X1=2
+{
+0:X1=x;
+1:X0=x;
+}
+ P0          | P1          ;
+ MOV W0,#2   | LDR W1,[X0] ;
+ STR W0,[X1] | MOV W2,#1   ;
+             | STR W2,[X0] ;
+exists ([x]=2 /\ 1:X1=2)

@@ -83,3 +83,52 @@ Cross-check: our sc.cat and rlx.cat give the same Observation as herd's built-in
 
 **Limitation to fix later:** no test here touches a single location only, so rlx.cat's coherence axiom never
 forbids anything in this suite (RLX = A everywhere). Add coherence tests (CoRR, CoWR, ...) to exercise it.
+
+## 2026-10-31 — Coherence tests (CoRR, CoWR, CoRW, CoWW): diyone7 problem
+
+Goal: add single-location tests so rlx.cat's coherence axiom is actually exercised; expect F under every model.
+
+- `diyone7` refuses one-location cycles ("Unique location") unless given `-oneloc`.
+  Single-thread cycles (`PosWR Fri`, `PosRW Rfi`, `PosWW Coi`) fail with `CannotNormalise("find_start")`:
+  diy needs at least one external edge. `PosWW Coe Coe` also needs `-obs accept` (adds an observer thread).
+- Cycles tried: CoRR `Rfe PosRR Fre`, CoWR `PosWR Fre Coe`, CoRW `Rfe PosRW Coe`, CoWW `PosWW Coe Coe`.
+- **Problem:** with `-oneloc`, diy writes a wrong final condition whenever the cycle has a co edge. Write values
+  are assigned correctly along co, but the condition lists writes in cycle order instead of co order
+  (with one location the cycle wraps around, so the two differ). herd7 results (scratchpad copies):
+
+  | test | condition | RLX RA SRA TSO SC Arm |
+  |---|---|---|
+  | CoRR (diy) | `1:X1=1 /\ 1:X2=0` | all Never |
+  | CoWR (diy) | `[x]=1 /\ 0:X2=0` | all Never (reading 0 after own write is forbidden anyway; `[x]=1` does not match the cycle) |
+  | CoWR (fixed) | `[x]=2 /\ 0:X2=0` | all Never |
+  | CoRW (diy) | `[x]=1 /\ 1:X1=2` | all **Sometimes**: plain SC run (P0 x=2; P1 reads 2; P1 x=1) |
+  | CoRW (fixed) | `[x]=2 /\ 1:X1=2` | all Never |
+  | CoWW (diy) | `0:X0=3 /\ 0:X2=1 /\ 0:X3=2` | all **Sometimes**: observer sees P1's own order 3,1,2 |
+  | CoWW (fixed) | `0:X0=1 /\ 0:X2=2 /\ 0:X3=3` | all Never |
+
+  Verdict: the models are right; diy's CoRW/CoWW conditions are wrong. `-obs accept|force`,
+  `-cond observe|unicond`, `-optcoherence` all keep the wrong order. The opam package ships no Co* tests.
+- Nothing added to `tests/` yet (CLAUDE.md: explain and ask before editing tests).
+
+## 2026-11-01 — Coherence tests added
+
+Decision (mine): keep diy's code, rewrite only the `exists` line of CoWR/CoRW/CoWW to follow the cycle's co order.
+```
+cd tests
+diyone7 -arch AArch64 -oneloc -name CoRR Rfe PosRR Fre
+diyone7 -arch AArch64 -oneloc -name CoWR PosWR Fre Coe
+diyone7 -arch AArch64 -oneloc -name CoRW Rfe PosRW Coe
+diyone7 -arch AArch64 -oneloc -obs accept -name CoWW PosWW Coe Coe
+```
+Then edited by hand (CoRR untouched). Each edited file has a `Fix=` header line with diy's original condition:
+- CoWR: `[x]=1 /\ 0:X2=0` → `[x]=2 /\ 0:X2=0`
+- CoRW: `[x]=1 /\ 1:X1=2` → `[x]=2 /\ 1:X1=2`
+- CoWW: `0:X0=3 /\ 0:X2=1 /\ 0:X3=2` → `0:X0=1 /\ 0:X2=2 /\ 0:X3=3`
+
+Checked herd7 and litmus7 both parse the files with the extra `Fix=` line.
+
+`python3 scripts/run_baselines.py`: all 24 new cells (4 tests x 6 models) are F, as expected.
+The 9 earlier tests' rows in results/baselines.csv are unchanged. RLX's coherence axiom is now exercised.
+
+Quirk: results/baselines.csv has `\r\n` line endings (Python csv default), so shell tools see `F\r`;
+strip with `tr -d '\r'` before awk/grep on the last column.
