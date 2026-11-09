@@ -266,3 +266,5 @@ observed" may also mean "allowed but rare", so mismatches stay soft evidence and
 Changed the Phase 1 inference rule in CLAUDE.md: zero mismatches is required only for truths inside the
 candidate space (SC, TSO). For truths outside it (aarch64, RA, SRA), the leftover mismatches show what the
 candidate space cannot express. This matches the Phase 1 results above; no code or results changed.
+Follow-up: the rule now starts with "In Phase 1," so it is scoped to Phase 1, and the Phases list names all five
+simulated truths (SC, TSO, RA, SRA, aarch64).
