@@ -209,3 +209,54 @@ Checked the checker: flipping one SB cell in a temp copy of the CSV gives FAIL o
   `acyclic rfe | co | fr`, and any such cycle is already a uniproc cycle, so the candidate is just coherence.
 - The two-pair tests come out as conjunctions: MP F iff W->W and R->R; S iff W->W and R->W; WRC iff R->R and R->W.
 - aarch64 differs from cand_0000/rlx only on LB+datas and IRIW+addrs (dependencies), which no candidate can express.
+
+## 2026-11-08 — Inference script and Phase 1 validation
+
+- `scripts/infer.py OBS.csv` (OBS has columns `test, observed` = yes/no; predictions from results/predictions.csv).
+  Per candidate: contradictions = observed but F (eliminated), mismatches = A but not observed (listed by name).
+  Writes `OBS_inference.csv` next to the input (all 16, sorted by contradictions then mismatches, so survivors
+  come first) and prints the survivors. Rejects observed values other than yes/no and unknown test names.
+- `scripts/phase1.py`: for truth in sc, tso, aarch64, ra, sra, writes `results/phase1/<truth>.csv` with
+  observed = yes exactly where herd7 says the truth allows the test (A), then runs infer.py on it.
+- `scripts/check_predictions.py`: added one check per truth (unique best survivor + its mismatched tests).
+  All 15 checks PASS. Checked a wrong expectation gives FAIL, and a bad `observed` value is rejected.
+
+### Phase 1 summary (for check-in)
+
+Simulated observations: a test is "observed" exactly when the ground-truth model allows it.
+
+| Truth | Survivors | Best candidate (unique) | Mismatches |
+|---|---|---|---|
+| sc | 16 | WW1_WR1_RR1_RW1 | 0 |
+| tso | 8 | WW1_WR0_RR1_RW1 | 0 |
+| aarch64 | 1 | WW0_WR0_RR0_RW0 | 2: IRIW+addrs, LB+datas |
+| ra | 2 | WW0_WR0_RR0_RW1 | 3: MP, S, WRC |
+| sra | 4 | WW1_WR0_RR0_RW1 | 2: MP, WRC |
+
+All five rows match the expected table.
+
+**SC and TSO are recovered exactly.** Both lie inside the candidate space; inference picks the right candidate
+uniquely with 0 mismatches, and the runner-up is at least 1 mismatch behind (for SC, the TSO candidate, off by SB).
+So the 13 tests and the inference rules separate the models we can express.
+
+**aarch64, RA and SRA lie outside the candidate space.** Their leftover mismatches are not a search failure: each
+one is forced, because an observed test switches off the flag that would forbid it. What they point to:
+
+- **aarch64 → dependencies.** Arm allows every plain shape (SB, MP, LB, 2+2W, S, WRC, IRIW), so only the fully
+  relaxed candidate survives. Arm still forbids LB+datas and IRIW+addrs: a data dependency orders R->W and an
+  address dependency orders R->R. Candidates ignore dependencies, so none can forbid LB+datas while allowing LB.
+  Fix: add dependency-aware flags (e.g. "R->W preserved when data-dependent", "R->R when address-dependent").
+- **RA → causality without a single global order.** RA forbids MP, S, WRC (once you read a value, you also see
+  everything that happened before its write: hb = (po | rf)+), but allows IRIW, 2+2W and SB. In our space MP needs
+  W->W and R->R, S needs W->W and R->W, WRC needs R->R and R->W. Observing 2+2W forces W->W off and observing IRIW
+  forces R->R off, so MP, S and WRC must stay allowed. The root cause: our candidates put co and fr in one global
+  order (multi-copy atomic), so preserving R->R forbids both MP and IRIW. RA is not multi-copy atomic: two readers
+  can disagree on the order of independent writes, yet causal chains through rf are still respected.
+- **SRA → same as RA, minus S.** SRA also orders writes consistently with hb (`acyclic po | rf | co`), which
+  forbids 2+2W and S; W->W + R->W captures that, so S is no longer a mismatch. MP and WRC remain, for the same
+  reason as RA: SRA still allows IRIW, which forces R->R off.
+
+**For Phase 2:** zero mismatches can only be expected if the hardware lies inside the space. Leftover mismatches on
+the dependency tests would point to dependency ordering (expected for an Arm core); MP/WRC-style mismatches
+alongside an observed IRIW would point to a non-multi-copy-atomic, causality-based model. On hardware, "not
+observed" may also mean "allowed but rare", so mismatches stay soft evidence and need enough litmus7 iterations.

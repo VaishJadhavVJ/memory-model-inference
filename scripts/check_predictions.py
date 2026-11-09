@@ -1,13 +1,20 @@
-"""Check results/predictions.csv against what the 16 candidates should predict.
+"""Check results/predictions.csv against what the 16 candidates should predict,
+and check Phase 1 inference against the expected best survivor for each simulated truth.
 
 Prints PASS/FAIL per expectation and exits with status 1 if any fail. Run scripts/predict.py first.
 """
-import csv
-from pathlib import Path
+from infer import infer, load_predictions
+from phase1 import simulate
 
-ROOT = Path(__file__).resolve().parent.parent
 COHERENCE = ["CoRR", "CoRW", "CoWR", "CoWW"]
 PIN = {"WR": "SB", "WW": "2+2W", "RW": "LB", "RR": "IRIW"}  # should be F exactly when the flag is 1
+PHASE1 = {  # truth: (unique best surviving candidate, its mismatched tests)
+    "sc": ("cand_WW1_WR1_RR1_RW1", []),
+    "tso": ("cand_WW1_WR0_RR1_RW1", []),
+    "aarch64": ("cand_WW0_WR0_RR0_RW0", ["IRIW+addrs", "LB+datas"]),
+    "ra": ("cand_WW0_WR0_RR0_RW1", ["MP", "S", "WRC"]),
+    "sra": ("cand_WW1_WR0_RR0_RW1", ["MP", "WRC"]),
+}
 
 
 def flags(name):
@@ -16,8 +23,7 @@ def flags(name):
 
 
 def main():
-    with open(ROOT / "results" / "predictions.csv", newline="") as f:
-        table = {row.pop("model"): row for row in csv.DictReader(f)}
+    table = load_predictions()
     cands = {name: row for name, row in table.items() if name.startswith("cand_")}
 
     checks = [
@@ -37,6 +43,14 @@ def main():
     checks.append(("LB+datas = LB and IRIW+addrs = IRIW for every candidate",
                    [n for n, row in cands.items()
                     if row["LB+datas"] != row["LB"] or row["IRIW+addrs"] != row["IRIW"]]))
+
+    for truth, (best, mismatched) in PHASE1.items():
+        survivors = [row for row in infer(table, simulate(table, truth)) if row["survives"] == "yes"]
+        fewest = survivors[0]["mismatches"] if survivors else None
+        got = [(row["candidate"], sorted(row["mismatched_tests"].split()))
+               for row in survivors if row["mismatches"] == fewest]
+        checks.append((f"Phase 1 {truth}: unique best {best}, mismatches {mismatched}",
+                       [] if got == [(best, sorted(mismatched))] else [f"got {got}"]))
 
     for label, failures in checks:
         print(("PASS  " if not failures else "FAIL  ") + label + ("" if not failures else f": {failures}"))

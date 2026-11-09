@@ -1,0 +1,17 @@
+candidate,survives,contradictions,contradicted_by,mismatches,mismatched_tests
+cand_WW1_WR1_RR1_RW1,yes,0,,0,
+cand_WW1_WR0_RR1_RW1,yes,0,,1,SB
+cand_WW0_WR1_RR1_RW1,yes,0,,3,2+2W MP S
+cand_WW0_WR0_RR1_RW1,yes,0,,4,2+2W MP S SB
+cand_WW1_WR1_RR0_RW1,yes,0,,4,IRIW IRIW+addrs MP WRC
+cand_WW1_WR1_RR1_RW0,yes,0,,4,LB LB+datas S WRC
+cand_WW1_WR0_RR0_RW1,yes,0,,5,IRIW IRIW+addrs MP SB WRC
+cand_WW1_WR0_RR1_RW0,yes,0,,5,LB LB+datas S SB WRC
+cand_WW0_WR1_RR0_RW1,yes,0,,6,2+2W IRIW IRIW+addrs MP S WRC
+cand_WW0_WR1_RR1_RW0,yes,0,,6,2+2W LB LB+datas MP S WRC
+cand_WW0_WR0_RR0_RW1,yes,0,,7,2+2W IRIW IRIW+addrs MP S SB WRC
+cand_WW0_WR0_RR1_RW0,yes,0,,7,2+2W LB LB+datas MP S SB WRC
+cand_WW1_WR1_RR0_RW0,yes,0,,7,IRIW IRIW+addrs LB LB+datas MP S WRC
+cand_WW0_WR1_RR0_RW0,yes,0,,8,2+2W IRIW IRIW+addrs LB LB+datas MP S WRC
+cand_WW1_WR0_RR0_RW0,yes,0,,8,IRIW IRIW+addrs LB LB+datas MP S SB WRC
+cand_WW0_WR0_RR0_RW0,yes,0,,9,2+2W IRIW IRIW+addrs LB LB+datas MP S SB WRC

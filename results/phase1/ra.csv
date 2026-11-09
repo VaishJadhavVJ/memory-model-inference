@@ -1,0 +1,14 @@
+test,observed
+2+2W,yes
+CoRR,no
+CoRW,no
+CoWR,no
+CoWW,no
+IRIW,yes
+IRIW+addrs,yes
+LB,no
+LB+datas,no
+MP,no
+S,no
+SB,yes
+WRC,no
