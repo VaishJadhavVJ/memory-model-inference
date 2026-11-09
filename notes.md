@@ -160,3 +160,52 @@ S           A    A    F    F    F    F    A
 SB          A    A    A    A    A    F    A
 WRC         A    A    F    F    F    F    A
 ```
+
+## 2026-11-08 — 16 candidate models, predictions table, expectation checks
+
+**Generator:** `python3 scripts/gen_candidates.py` writes `models/candidates/cand_WW?_WR?_RR?_RW?.cat` (16 files).
+Same shape as tso.cat (uniproc axiom + `acyclic ppo | rfe | co | fr as global`); only `let ppo = ...` changes:
+the union of `(po & (A * B))` for each preserved pair, or `0` (cat's empty relation) if none is preserved.
+
+**Sanity checks (step 2), full Observation line incl. execution counts, all 13 tests:**
+- `sc.cat` vs `cand_WW1_WR1_RR1_RW1`: 13/13 identical. PASS
+- `tso.cat` vs `cand_WW1_WR0_RR1_RW1`: 13/13 identical (its ppo line is word-for-word tso.cat's). PASS
+
+**Predictions:** `python3 scripts/predict.py` → `results/predictions.csv` (23 models x 13 tests, A/F).
+Reuses `observe()`, `VERDICT` and the baseline list `MODELS` from run_baselines.py. ~2 s.
+```
+model                2+2W CoRR CoRW CoWR CoWW IRIW IRIW+addrs LB LB+datas MP S SB WRC
+none                 A    A    A    A    A    A    A          A  A        A  A A  A
+rlx                  A    F    F    F    F    A    A          A  A        A  A A  A
+ra                   A    F    F    F    F    A    A          F  F        F  F A  F
+sra                  F    F    F    F    F    A    A          F  F        F  F A  F
+tso                  F    F    F    F    F    F    F          F  F        F  F A  F
+sc                   F    F    F    F    F    F    F          F  F        F  F F  F
+aarch64              A    F    F    F    F    A    F          A  F        A  A A  A
+cand_WW0_WR0_RR0_RW0 A    F    F    F    F    A    A          A  A        A  A A  A
+cand_WW0_WR0_RR0_RW1 A    F    F    F    F    A    A          F  F        A  A A  A
+cand_WW0_WR0_RR1_RW0 A    F    F    F    F    F    F          A  A        A  A A  A
+cand_WW0_WR0_RR1_RW1 A    F    F    F    F    F    F          F  F        A  A A  F
+cand_WW0_WR1_RR0_RW0 A    F    F    F    F    A    A          A  A        A  A F  A
+cand_WW0_WR1_RR0_RW1 A    F    F    F    F    A    A          F  F        A  A F  A
+cand_WW0_WR1_RR1_RW0 A    F    F    F    F    F    F          A  A        A  A F  A
+cand_WW0_WR1_RR1_RW1 A    F    F    F    F    F    F          F  F        A  A F  F
+cand_WW1_WR0_RR0_RW0 F    F    F    F    F    A    A          A  A        A  A A  A
+cand_WW1_WR0_RR0_RW1 F    F    F    F    F    A    A          F  F        A  F A  A
+cand_WW1_WR0_RR1_RW0 F    F    F    F    F    F    F          A  A        F  A A  A
+cand_WW1_WR0_RR1_RW1 F    F    F    F    F    F    F          F  F        F  F A  F
+cand_WW1_WR1_RR0_RW0 F    F    F    F    F    A    A          A  A        A  A F  A
+cand_WW1_WR1_RR0_RW1 F    F    F    F    F    A    A          F  F        A  F F  A
+cand_WW1_WR1_RR1_RW0 F    F    F    F    F    F    F          A  A        F  A F  A
+cand_WW1_WR1_RR1_RW1 F    F    F    F    F    F    F          F  F        F  F F  F
+```
+**Expectation checks (step 4):** `python3 scripts/check_predictions.py` (reads the CSV, exit 1 on any FAIL).
+All PASS: 16 candidates; SC/TSO matches; coherence tests F for every candidate; no ties; SB/2+2W/LB/IRIW are F
+exactly when W->R/W->W/R->W/R->R is preserved; LB+datas = LB and IRIW+addrs = IRIW for every candidate.
+Checked the checker: flipping one SB cell in a temp copy of the CSV gives FAIL on the pin and tie checks, exit 1.
+
+**Observations:**
+- `cand_WW0_WR0_RR0_RW0` = `rlx` on every test. Expected in general: with ppo = 0 the global axiom is
+  `acyclic rfe | co | fr`, and any such cycle is already a uniproc cycle, so the candidate is just coherence.
+- The two-pair tests come out as conjunctions: MP F iff W->W and R->R; S iff W->W and R->W; WRC iff R->R and R->W.
+- aarch64 differs from cand_0000/rlx only on LB+datas and IRIW+addrs (dependencies), which no candidate can express.
