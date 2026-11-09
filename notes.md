@@ -260,3 +260,9 @@ one is forced, because an observed test switches off the flag that would forbid 
 the dependency tests would point to dependency ordering (expected for an Arm core); MP/WRC-style mismatches
 alongside an observed IRIW would point to a non-multi-copy-atomic, causality-based model. On hardware, "not
 observed" may also mean "allowed but rare", so mismatches stay soft evidence and need enough litmus7 iterations.
+
+## 2026-11-08 — Phase 1 rule in CLAUDE.md
+
+Changed the Phase 1 inference rule in CLAUDE.md: zero mismatches is required only for truths inside the
+candidate space (SC, TSO). For truths outside it (aarch64, RA, SRA), the leftover mismatches show what the
+candidate space cannot express. This matches the Phase 1 results above; no code or results changed.

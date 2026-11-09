@@ -14,7 +14,9 @@ Check-in due ~Nov 13. Final due Dec 4.
 - Inference rules:
   - Observed on hardware but Forbidden by a candidate: candidate eliminated (hard evidence).
   - Allowed by a candidate but never observed: not eliminated, counted as a mismatch (soft evidence).
-  - Survivors ranked by mismatch count. In Phase 1 (simulated, ground truth known) require zero mismatches.
+  - Survivors ranked by mismatch count. Require zero mismatches only for truths inside the
+    candidate space (SC, TSO). For truths outside it, the leftover mismatches show what the candidate
+    space cannot express.
 
 ## Phases
 1. Validate on herd7-simulated observations (SC, TSO, RA).
