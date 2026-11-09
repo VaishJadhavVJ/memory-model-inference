@@ -13,6 +13,7 @@ BASELINES = ROOT / "models" / "baselines"
 # Column name -> model passed to herd7 -model. Our files use full paths, because a bare
 # "sc.cat" or "tso.cat" would load herd7's built-in file of the same name instead.
 MODELS = {
+    "None": BASELINES / "none.cat",
     "RLX": BASELINES / "rlx.cat",
     "RA": BASELINES / "ra.cat",
     "SRA": BASELINES / "sra.cat",
@@ -44,7 +45,7 @@ def main():
                          "positive": positive, "negative": negative, "verdict": VERDICT[observation]})
 
     with open(ROOT / "results" / "baselines.csv", "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+        writer = csv.DictWriter(f, fieldnames=rows[0].keys(), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

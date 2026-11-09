@@ -1,0 +1,4 @@
+"NONE"
+include "cos.cat"
+
+(* No axioms: every execution herd7 builds (any rf, any co per location) is allowed *)

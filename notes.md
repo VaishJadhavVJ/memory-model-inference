@@ -132,3 +132,31 @@ The 9 earlier tests' rows in results/baselines.csv are unchanged. RLX's coherenc
 
 Quirk: results/baselines.csv has `\r\n` line endings (Python csv default), so shell tools see `F\r`;
 strip with `tr -d '\r'` before awk/grep on the last column.
+
+## 2026-11-08 — none.cat sanity baseline, LF line endings in CSV
+
+- `run_baselines.py`: CSV now written with `lineterminator="\n"` (was `\r\n`). Checked: 0 `\r` in the file.
+- Added `models/baselines/none.cat`: only `include "cos.cat"`, no axioms. herd7 still enumerates every rf and
+  every co per location, then accepts all of them. Added as first column "None".
+- Checked that `cos.cat` → `cos-no-opt.cat` → `cross.cat` contain only definitions, no checks.
+  herd7's `-optace` (default `iico`) could in principle prune candidates early; `-optace false` gives identical
+  counts on CoRR/CoWR/CoRW/CoWW (1 3, 1 5, 1 5, 6 378), so nothing is pruned before the model.
+- Result: all 13 tests are A under none.cat. In particular CoWR, CoRW, CoWW (edited conditions) are reachable,
+  so their F under every other model comes from the models' coherence axioms, not from an impossible condition.
+  All earlier cells unchanged.
+```
+Test        None RLX  RA   SRA  TSO  SC   Arm
+2+2W        A    A    A    F    F    F    A
+CoRR        A    F    F    F    F    F    F
+CoRW        A    F    F    F    F    F    F
+CoWR        A    F    F    F    F    F    F
+CoWW        A    F    F    F    F    F    F
+IRIW        A    A    A    A    F    F    A
+IRIW+addrs  A    A    A    A    F    F    F
+LB          A    A    F    F    F    F    A
+LB+datas    A    A    F    F    F    F    F
+MP          A    A    F    F    F    F    A
+S           A    A    F    F    F    F    A
+SB          A    A    A    A    A    F    A
+WRC         A    A    F    F    F    F    A
+```
