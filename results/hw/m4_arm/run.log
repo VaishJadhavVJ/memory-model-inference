@@ -1,0 +1,629 @@
+Wed Nov 11 20:28:11 CST 2026
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/2+2W.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 2+2W
+"PodWW Coe PodWW Coe"
+
+{
+ 0:X1=x; 0:X3=y;
+ 1:X1=y; 1:X3=x;
+}
+ P0          | P1          ;
+ MOV W0,#2   | MOV W0,#2   ;
+ STR W0,[X1] | STR W0,[X1] ;
+ MOV W2,#1   | MOV W2,#1   ;
+ STR W2,[X3] | STR W2,[X3] ;
+
+exists ([x]=2 /\ [y]=2)
+Generated assembler
+	;START _litmus_P0
+	mov	w0, #2                          ; =0x2
+	str	w0, [x16]
+	mov	w17, #1                         ; =0x1
+	str	w17, [x15]
+	;START _litmus_P1
+	mov	w0, #2                          ; =0x2
+	str	w0, [x16]
+	mov	w17, #1                         ; =0x1
+	str	w17, [x15]
+Test 2+2W Allowed
+Histogram (4 states)
+230   :>[x]=1; [y]=1;
+24999843:>[x]=2; [y]=1;
+24999801:>[x]=1; [y]=2;
+126   *>[x]=2; [y]=2;
+Ok
+
+Witnesses
+Positive: 126, Negative: 49999874
+Condition exists ([x]=2 /\ [y]=2) is validated
+Hash=5112e7c862483914f9d4e140b60657b2
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWW Coe PodWW Coe
+Observation 2+2W Sometimes 126 49999874
+Time 2+2W 1.09
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/CoRR.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 CoRR
+"Rfe PosRR Fre"
+
+{
+ 0:X1=x;
+ 1:X0=x;
+}
+ P0          | P1          ;
+ MOV W0,#1   | LDR W1,[X0] ;
+ STR W0,[X1] | LDR W2,[X0] ;
+
+exists (1:X1=1 /\ 1:X2=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w16, #1                         ; =0x1
+	str	w16, [x15]
+	;START _litmus_P1
+	ldr	w2, [x0]
+	ldr	w1, [x0]
+Test CoRR Allowed
+Histogram (2 states)
+25728231:>1:X1=0; 1:X2=0;
+24271769:>1:X1=1; 1:X2=1;
+No
+
+Witnesses
+Positive: 0, Negative: 50000000
+Condition exists (1:X1=1 /\ 1:X2=0) is NOT validated
+Hash=58714bf58ff46be75de27369e727776e
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=Rfe PosRR Fre
+Observation CoRR Never 0 50000000
+Time CoRR 1.12
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/CoRW.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 CoRW
+"Rfe PosRW Coe"
+
+{
+ 0:X1=x;
+ 1:X0=x;
+}
+ P0          | P1          ;
+ MOV W0,#2   | LDR W1,[X0] ;
+ STR W0,[X1] | MOV W2,#1   ;
+             | STR W2,[X0] ;
+
+exists ([x]=2 /\ 1:X1=2)
+Generated assembler
+	;START _litmus_P0
+	mov	w16, #2                         ; =0x2
+	str	w16, [x15]
+	;START _litmus_P1
+	ldr	w0, [x17]
+	mov	w1, #1                          ; =0x1
+	str	w1, [x17]
+Test CoRW Allowed
+Histogram (3 states)
+10396 :>1:X1=0; [x]=1;
+24403160:>1:X1=2; [x]=1;
+25586444:>1:X1=0; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 50000000
+Condition exists ([x]=2 /\ 1:X1=2) is NOT validated
+Hash=8a02f168b6c0e7b1ef6d936e273d58c1
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=Rfe PosRW Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: [x]=1 /\ 1:X1=2
+Observation CoRW Never 0 50000000
+Time CoRW 1.29
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/CoWR.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 CoWR
+"PosWR Fre Coe"
+
+{
+ 0:X1=x;
+ 1:X1=x;
+}
+ P0          | P1          ;
+ MOV W0,#2   | MOV W0,#1   ;
+ STR W0,[X1] | STR W0,[X1] ;
+ LDR W2,[X1] |             ;
+
+exists ([x]=2 /\ 0:X2=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w1, #2                          ; =0x2
+	str	w1, [x17]
+	ldr	w0, [x17]
+	;START _litmus_P1
+	mov	w16, #1                         ; =0x1
+	str	w16, [x15]
+Test CoWR Allowed
+Histogram (3 states)
+3     :>0:X2=1; [x]=1;
+25691934:>0:X2=2; [x]=1;
+24308063:>0:X2=2; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 50000000
+Condition exists ([x]=2 /\ 0:X2=0) is NOT validated
+Hash=0c3e3a1070d963953cb541f321e4859c
+Generator=diyone7 (version 7.58)
+Com=Fr Co
+Orig=PosWR Fre Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: [x]=1 /\ 0:X2=0
+Observation CoWR Never 0 50000000
+Time CoWR 1.10
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/CoWW.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 CoWW
+"PosWW Coe Coe"
+
+{
+ 0:X1=x;
+ 1:X1=x;
+ 2:X1=x;
+}
+ P0          | P1          | P2          ;
+ LDR W0,[X1] | MOV W0,#3   | MOV W0,#2   ;
+ LDR W2,[X1] | STR W0,[X1] | STR W0,[X1] ;
+ LDR W3,[X1] | MOV W2,#1   |             ;
+             | STR W2,[X1] |             ;
+
+exists (0:X0=1 /\ 0:X2=2 /\ 0:X3=3)
+Generated assembler
+	;START _litmus_P0
+	ldr	w5, [x2]
+	ldr	w4, [x2]
+	ldr	w3, [x2]
+	;START _litmus_P1
+	mov	w0, #3                          ; =0x3
+	str	w0, [x16]
+	mov	w17, #1                         ; =0x1
+	str	w17, [x16]
+	;START _litmus_P2
+	mov	w17, #2                         ; =0x2
+	str	w17, [x16]
+Test CoWW Allowed
+Histogram (14 states)
+10801899:>0:X0=0; 0:X2=0; 0:X3=0;
+812   :>0:X0=0; 0:X2=0; 0:X3=1;
+35    :>0:X0=0; 0:X2=1; 0:X3=1;
+10308310:>0:X0=1; 0:X2=1; 0:X3=1;
+38    :>0:X0=2; 0:X2=1; 0:X3=1;
+15869 :>0:X0=2; 0:X2=2; 0:X3=1;
+1     :>0:X0=3; 0:X2=3; 0:X3=1;
+1364  :>0:X0=0; 0:X2=0; 0:X3=2;
+10527 :>0:X0=1; 0:X2=1; 0:X3=2;
+29    :>0:X0=0; 0:X2=2; 0:X3=2;
+58    :>0:X0=1; 0:X2=2; 0:X3=2;
+8856881:>0:X0=2; 0:X2=2; 0:X3=2;
+1     :>0:X0=2; 0:X2=2; 0:X3=3;
+4176  :>0:X0=3; 0:X2=3; 0:X3=3;
+No
+
+Witnesses
+Positive: 0, Negative: 30000000
+Condition exists (0:X0=1 /\ 0:X2=2 /\ 0:X3=3) is NOT validated
+Hash=c0e162dd1124a648fa39d966ac55b16a
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PosWW Coe Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: 0:X0=3 /\ 0:X2=1 /\ 0:X3=2
+Observation CoWW Never 0 30000000
+Time CoWW 1.41
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/IRIW+addrs.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 IRIW+addrs
+"Rfe DpAddrdR Fre Rfe DpAddrdR Fre"
+
+{
+ 0:X1=x;
+ 1:X0=x; 1:X4=y;
+ 2:X1=y;
+ 3:X0=y; 3:X4=x;
+}
+ P0          | P1                  | P2          | P3                  ;
+ MOV W0,#1   | LDR W1,[X0]         | MOV W0,#1   | LDR W1,[X0]         ;
+ STR W0,[X1] | EOR W2,W1,W1        | STR W0,[X1] | EOR W2,W1,W1        ;
+             | LDR W3,[X4,W2,SXTW] |             | LDR W3,[X4,W2,SXTW] ;
+
+exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w16, #1                         ; =0x1
+	str	w16, [x15]
+	;START _litmus_P1
+	ldr	w3, [x0]
+	eor	w4, w3, w3
+	ldr	w2, [x1, w4, sxtw]
+	;START _litmus_P2
+	mov	w16, #1                         ; =0x1
+	str	w16, [x15]
+	;START _litmus_P3
+	ldr	w3, [x0]
+	eor	w4, w3, w3
+	ldr	w2, [x1, w4, sxtw]
+Test IRIW+addrs Allowed
+Histogram (15 states)
+4875346:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=0;
+380473:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=0;
+1584617:>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=0;
+1088832:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=0;
+336601:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=0;
+1952614:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=0;
+273045:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=0;
+1501423:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=1;
+1913514:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=1;
+32623 :>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=1;
+1277322:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=1;
+1070916:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=1;
+167243:>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=1;
+1187911:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=1;
+2357520:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 20000000
+Condition exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0) is NOT validated
+Hash=d5e5ef8ec814571d2e5b48bc1a43e8b5
+Generator=diyone7 (version 7.58)
+Com=Rf Fr Rf Fr
+Orig=Rfe DpAddrdR Fre Rfe DpAddrdR Fre
+Observation IRIW+addrs Never 0 20000000
+Time IRIW+addrs 1.58
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/IRIW.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 IRIW
+"Rfe PodRR Fre Rfe PodRR Fre"
+
+{
+ 0:X1=x;
+ 1:X0=x; 1:X2=y;
+ 2:X1=y;
+ 3:X0=y; 3:X2=x;
+}
+ P0          | P1          | P2          | P3          ;
+ MOV W0,#1   | LDR W1,[X0] | MOV W0,#1   | LDR W1,[X0] ;
+ STR W0,[X1] | LDR W3,[X2] | STR W0,[X1] | LDR W3,[X2] ;
+
+exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w16, #1                         ; =0x1
+	str	w16, [x15]
+	;START _litmus_P1
+	ldr	w3, [x0]
+	ldr	w2, [x1]
+	;START _litmus_P2
+	mov	w16, #1                         ; =0x1
+	str	w16, [x15]
+	;START _litmus_P3
+	ldr	w3, [x0]
+	ldr	w2, [x1]
+Test IRIW Allowed
+Histogram (16 states)
+5877626:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=0;
+1065482:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=0;
+1121050:>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=0;
+617570:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=0;
+861474:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=0;
+31177 *>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=0;
+2548443:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=0;
+467151:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=0;
+1151021:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=1;
+2509015:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=1;
+44463 :>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=1;
+607815:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=1;
+491181:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=1;
+434749:>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=1;
+513803:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=1;
+1657980:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=1;
+Ok
+
+Witnesses
+Positive: 31177, Negative: 19968823
+Condition exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0) is validated
+Hash=68e78de5bf12fa325b962b6ec65cdf8e
+Generator=diyone7 (version 7.58)
+Com=Rf Fr Rf Fr
+Orig=Rfe PodRR Fre Rfe PodRR Fre
+Observation IRIW Sometimes 31177 19968823
+Time IRIW 1.82
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/LB+datas.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 LB+datas
+"DpDatadW Rfe DpDatadW Rfe"
+
+{
+ 0:X0=x; 0:X3=y;
+ 1:X0=y; 1:X3=x;
+}
+ P0           | P1           ;
+ LDR W1,[X0]  | LDR W1,[X0]  ;
+ EOR W2,W1,W1 | EOR W2,W1,W1 ;
+ ADD W2,W2,#1 | ADD W2,W2,#1 ;
+ STR W2,[X3]  | STR W2,[X3]  ;
+
+exists (0:X1=1 /\ 1:X1=1)
+Generated assembler
+	;START _litmus_P0
+	ldr	w1, [x17]
+	eor	w2, w1, w1
+	add	w2, w2, #1
+	str	w2, [x0]
+	;START _litmus_P1
+	ldr	w1, [x17]
+	eor	w2, w1, w1
+	add	w2, w2, #1
+	str	w2, [x0]
+Test LB+datas Allowed
+Histogram (3 states)
+2012  :>0:X1=0; 1:X1=0;
+24998922:>0:X1=1; 1:X1=0;
+24999066:>0:X1=0; 1:X1=1;
+No
+
+Witnesses
+Positive: 0, Negative: 50000000
+Condition exists (0:X1=1 /\ 1:X1=1) is NOT validated
+Hash=e50b574668a3915fb9b2a3f456a8e841
+Generator=diyone7 (version 7.58)
+Com=Rf Rf
+Orig=DpDatadW Rfe DpDatadW Rfe
+Observation LB+datas Never 0 50000000
+Time LB+datas 0.98
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/LB.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 LB
+"PodRW Rfe PodRW Rfe"
+
+{
+ 0:X0=x; 0:X3=y;
+ 1:X0=y; 1:X3=x;
+}
+ P0          | P1          ;
+ LDR W1,[X0] | LDR W1,[X0] ;
+ MOV W2,#1   | MOV W2,#1   ;
+ STR W2,[X3] | STR W2,[X3] ;
+
+exists (0:X1=1 /\ 1:X1=1)
+Generated assembler
+	;START _litmus_P0
+	ldr	w1, [x17]
+	mov	w2, #1                          ; =0x1
+	str	w2, [x0]
+	;START _litmus_P1
+	ldr	w1, [x17]
+	mov	w2, #1                          ; =0x1
+	str	w2, [x0]
+Test LB Allowed
+Histogram (3 states)
+2437  :>0:X1=0; 1:X1=0;
+24998729:>0:X1=1; 1:X1=0;
+24998834:>0:X1=0; 1:X1=1;
+No
+
+Witnesses
+Positive: 0, Negative: 50000000
+Condition exists (0:X1=1 /\ 1:X1=1) is NOT validated
+Hash=75efc9d3fd2408a0f1d61e2dbe4a5037
+Generator=diyone7 (version 7.58)
+Com=Rf Rf
+Orig=PodRW Rfe PodRW Rfe
+Observation LB Never 0 50000000
+Time LB 1.06
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/MP.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 MP
+"PodWW Rfe PodRR Fre"
+
+{
+ 0:X1=x; 0:X3=y;
+ 1:X0=y; 1:X2=x;
+}
+ P0          | P1          ;
+ MOV W0,#1   | LDR W1,[X0] ;
+ STR W0,[X1] | LDR W3,[X2] ;
+ MOV W2,#1   |             ;
+ STR W2,[X3] |             ;
+
+exists (1:X1=1 /\ 1:X3=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w0, #1                          ; =0x1
+	str	w0, [x16]
+	mov	w17, #1                         ; =0x1
+	str	w17, [x15]
+	;START _litmus_P1
+	ldr	w3, [x0]
+	ldr	w2, [x1]
+Test MP Allowed
+Histogram (4 states)
+25000554:>1:X1=0; 1:X3=0;
+456   *>1:X1=1; 1:X3=0;
+407   :>1:X1=0; 1:X3=1;
+24998583:>1:X1=1; 1:X3=1;
+Ok
+
+Witnesses
+Positive: 456, Negative: 49999544
+Condition exists (1:X1=1 /\ 1:X3=0) is validated
+Hash=9827c55a473553b4e097483de0205966
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=PodWW Rfe PodRR Fre
+Observation MP Sometimes 456 49999544
+Time MP 1.06
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/S.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 S
+"PodWW Rfe PodRW Coe"
+
+{
+ 0:X1=x; 0:X3=y;
+ 1:X0=y; 1:X3=x;
+}
+ P0          | P1          ;
+ MOV W0,#2   | LDR W1,[X0] ;
+ STR W0,[X1] | MOV W2,#1   ;
+ MOV W2,#1   | STR W2,[X3] ;
+ STR W2,[X3] |             ;
+
+exists ([x]=2 /\ 1:X1=1)
+Generated assembler
+	;START _litmus_P0
+	mov	w0, #2                          ; =0x2
+	str	w0, [x16]
+	mov	w17, #1                         ; =0x1
+	str	w17, [x15]
+	;START _litmus_P1
+	ldr	w1, [x17]
+	mov	w2, #1                          ; =0x1
+	str	w2, [x0]
+Test S Allowed
+Histogram (4 states)
+1154  :>1:X1=0; [x]=1;
+24998882:>1:X1=1; [x]=1;
+24999935:>1:X1=0; [x]=2;
+29    *>1:X1=1; [x]=2;
+Ok
+
+Witnesses
+Positive: 29, Negative: 49999971
+Condition exists ([x]=2 /\ 1:X1=1) is validated
+Hash=4a8390a6db1dd4bb80b5f2347e861742
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=PodWW Rfe PodRW Coe
+Observation S Sometimes 29 49999971
+Time S 1.02
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/SB.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 SB
+"PodWR Fre PodWR Fre"
+
+{
+ 0:X1=x; 0:X2=y;
+ 1:X1=y; 1:X2=x;
+}
+ P0          | P1          ;
+ MOV W0,#1   | MOV W0,#1   ;
+ STR W0,[X1] | STR W0,[X1] ;
+ LDR W3,[X2] | LDR W3,[X2] ;
+
+exists (0:X3=0 /\ 1:X3=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w2, #1                          ; =0x1
+	str	w2, [x17]
+	ldr	w1, [x0]
+	;START _litmus_P1
+	mov	w2, #1                          ; =0x1
+	str	w2, [x17]
+	ldr	w1, [x0]
+Test SB Allowed
+Histogram (4 states)
+2255  *>0:X3=0; 1:X3=0;
+24998902:>0:X3=1; 1:X3=0;
+24998761:>0:X3=0; 1:X3=1;
+82    :>0:X3=1; 1:X3=1;
+Ok
+
+Witnesses
+Positive: 2255, Negative: 49997745
+Condition exists (0:X3=0 /\ 1:X3=0) is validated
+Hash=0e1eb22a42a7de6af162a7e5cbb4e4d3
+Generator=diyone7 (version 7.58)
+Com=Fr Fr
+Orig=PodWR Fre PodWR Fre
+Observation SB Sometimes 2255 49997745
+Time SB 0.99
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results for tests/WRC.litmus %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AArch64 WRC
+"Rfe PodRW Rfe PodRR Fre"
+
+{
+ 0:X1=x;
+ 1:X0=x; 1:X3=y;
+ 2:X0=y; 2:X2=x;
+}
+ P0          | P1          | P2          ;
+ MOV W0,#1   | LDR W1,[X0] | LDR W1,[X0] ;
+ STR W0,[X1] | MOV W2,#1   | LDR W3,[X2] ;
+             | STR W2,[X3] |             ;
+
+exists (1:X1=1 /\ 2:X1=1 /\ 2:X3=0)
+Generated assembler
+	;START _litmus_P0
+	mov	w17, #1                         ; =0x1
+	str	w17, [x16]
+	;START _litmus_P1
+	ldr	w2, [x0]
+	mov	w3, #1                          ; =0x1
+	str	w3, [x1]
+	;START _litmus_P2
+	ldr	w4, [x1]
+	ldr	w3, [x2]
+Test WRC Allowed
+Histogram (8 states)
+7365006:>1:X1=0; 2:X1=0; 2:X3=0;
+3325348:>1:X1=1; 2:X1=0; 2:X3=0;
+7062119:>1:X1=0; 2:X1=1; 2:X3=0;
+106   *>1:X1=1; 2:X1=1; 2:X3=0;
+102051:>1:X1=0; 2:X1=0; 2:X3=1;
+6251070:>1:X1=1; 2:X1=0; 2:X3=1;
+3108855:>1:X1=0; 2:X1=1; 2:X3=1;
+2785445:>1:X1=1; 2:X1=1; 2:X3=1;
+Ok
+
+Witnesses
+Positive: 106, Negative: 29999894
+Condition exists (1:X1=1 /\ 2:X1=1 /\ 2:X3=0) is validated
+Hash=f3fc58fce294b56b060f0bb6ccc27330
+Generator=diyone7 (version 7.58)
+Com=Rf Rf Fr
+Orig=Rfe PodRW Rfe PodRR Fre
+Observation WRC Sometimes 106 29999894
+Time WRC 1.51
+Revision exported, version 7.58
+Command line: litmus7 -mach M1 -a 10 -s 100k -r 10 -o build/m4_arm tests/2+2W.litmus tests/CoRR.litmus tests/CoRW.litmus tests/CoWR.litmus tests/CoWW.litmus tests/IRIW+addrs.litmus tests/IRIW.litmus tests/LB+datas.litmus tests/LB.litmus tests/MP.litmus tests/S.litmus tests/SB.litmus tests/WRC.litmus
+Parameters
+#define SIZE_OF_TEST 100000
+#define NUMBER_OF_RUN 10
+#define AVAIL 10
+#define STRIDE 1
+#define MAX_LOOP 0
+/* gcc options: -Wall -std=gnu99 -O2 */
+/* barrier: user */
+/* launch: changing */
+/* affinity: none */
+/* memory: direct */
+/* stride: 1 */
+/* safer: write */
+/* preload: random */
+/* speedcheck: no */
+/* alloc: dynamic */
+/* proc used: 10 */
+GCC=gcc
+LITMUSOPTS=-r 100
+Wed Nov 11 20:28:27 CST 2026

@@ -268,3 +268,92 @@ candidate space (SC, TSO). For truths outside it (aarch64, RA, SRA), the leftove
 candidate space cannot express. This matches the Phase 1 results above; no code or results changed.
 Follow-up: the rule now starts with "In Phase 1," so it is scoped to Phase 1, and the Phases list names all five
 simulated truths (SC, TSO, RA, SRA, aarch64).
+
+## 2026-11-11 — Phase 2: first hardware run, Apple M4 in Arm mode (native macOS)
+
+Step 0 (my predictions table for the M4) skipped at my request; it does not exist yet, so the comparison
+with my own predictions is still to do.
+
+**Toolchain problems (fixed with two shell variables only, no system settings changed):**
+- `gcc` is Xcode.app's clang, whose license was never accepted ("You have not agreed to the Xcode license
+  agreements"). Accepting it needs `sudo xcodebuild -license`; left alone. Used the separate Command Line
+  Tools instead: `export DEVELOPER_DIR=/Library/Developer/CommandLineTools`.
+- Linking then failed: `ld: tapi error: malformed file ... MacOSX27.0.sdk/usr/lib/libSystem.B.tbd: unknown
+  architecture arm64e.x1-macos`. clang picked the newest SDK (27.0), which is newer than the CLT 26.6
+  linker understands. Fixed with the SDK matching the tools and macOS 26.6:
+  `export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk`.
+
+**litmus7 options** (litmus7 7.58):
+- `-mach M1`: litmus7's bundled MacBook M1 config (`$(litmus7 -libdir)/M1.cfg`): `os = Mac` (target macOS),
+  `affinity = none` (macOS has no call to pin a thread to a core), `memory = direct` (threads access the test
+  locations directly, not through pointers), `stride = 1` (threads walk the array of test instances one
+  slot at a time). Its size/run/avail values are overridden by the options below.
+- `-a 10`: the M4 has 10 cores (4 P + 6 E). litmus7 runs floor(10 / threads) copies of a test at once:
+  5 for 2-thread tests, 3 for 3-thread tests (CoWW, WRC), 2 for 4-thread tests (IRIW, IRIW+addrs).
+- `-s 100k -r 10`: litmus7's own defaults (100,000 iterations per run, 10 runs), compiled in. Executions
+  per test = s x r x copies.
+- `-o build/m4_arm`: write C files, Makefile and run.sh there instead of running immediately (build/ is
+  gitignored). run.sh passes its arguments to every test binary.
+- **No thread pinning: the OS scheduler decides, so test threads may land on P or E cores, and this can change
+  between runs.**
+
+**Commands:**
+```
+eval $(opam env)
+export DEVELOPER_DIR=/Library/Developer/CommandLineTools
+export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk
+litmus7 -mach M1 -a 10 -s 100k -r 10 -o build/m4_arm tests/*.litmus
+cd build/m4_arm && make -j 8
+sh run.sh > ../../results/hw/m4_arm/small.log          # small run: 2M-5M executions per test, 3.8 s
+sh run.sh -r 100 > ../../results/hw/m4_arm/run.log     # real run: 20M-50M executions per test, 16 s
+cd ../..
+python3 scripts/hw_obs.py results/hw/m4_arm/run.log results/obs_m4_arm.csv
+python3 scripts/infer.py results/obs_m4_arm.csv
+```
+
+**New script `scripts/hw_obs.py LOG OUT.csv`:** reads each test's `Hash=` and `Observation` lines from a
+litmus7 log, runs herd7 on the same tests/ file and compares hashes (stops, writing nothing, if one differs
+or a test is missing), and writes `test, observed, weak, total`. Checked by editing one hash in a copy of
+the log: it reports "DIFFERS", exits 1 and writes no CSV.
+
+**Hash check:** all 13 litmus7 hashes equal herd7's, so the hardware ran exactly the tests herd7 analysed.
+
+**Results (real run) vs herd7 aarch64:**
+
+| Test | aarch64 | M4 observed | weak / total |
+|---|---|---|---|
+| 2+2W | A | yes | 126 / 50M |
+| CoRR | F | no | 0 / 50M |
+| CoRW | F | no | 0 / 50M |
+| CoWR | F | no | 0 / 50M |
+| CoWW | F | no | 0 / 30M |
+| IRIW | A | yes | 31177 / 20M |
+| IRIW+addrs | F | no | 0 / 20M |
+| LB | A | **no** | 0 / 50M |
+| LB+datas | F | no | 0 / 50M |
+| MP | A | yes | 456 / 50M |
+| S | A | yes | 29 / 50M |
+| SB | A | yes | 2255 / 50M |
+| WRC | A | yes | 106 / 30M |
+
+The small run gave the same yes/no on all 13 tests (LB also 0 there).
+
+**Nothing observed that aarch64 forbids** (no contradiction with the Arm model). The only difference: LB is
+allowed by aarch64 but was never observed in 50M runs.
+
+**Inference** (`results/obs_m4_arm_inference.csv`): 2 of 16 candidates survive.
+- `cand_WW0_WR0_RR0_RW1` (only R->W preserved): 0 contradictions, 1 mismatch (IRIW+addrs).
+- `cand_WW0_WR0_RR0_RW0` (fully relaxed): 0 contradictions, 3 mismatches (IRIW+addrs, LB, LB+datas).
+Every other candidate is eliminated by an observed test (SB kills W->R, 2+2W kills W->W, IRIW kills R->R).
+
+**Reading:**
+- The M4 shows every weak behaviour aarch64 allows on these tests except LB. Best fit: "Arm without
+  load->store reordering", i.e. a later store never becomes visible before an earlier load has read.
+  This is soft evidence: 0 in 50M could also mean "allowed but very rare".
+- The leftover IRIW+addrs mismatch is the dependency effect seen in Phase 1 for aarch64: with an address
+  dependency between the two reads, IRIW disappears. Plain IRIW shows up only because the readers' loads are
+  reordered, which is consistent with Arm's multi-copy atomicity.
+- Preliminary answer to question (1): on these 13 tests the M4 is not as weak as the Arm spec allows (no LB).
+
+**Next:** fill in my predictions table and compare; run LB with many more iterations and other `-a`/stride
+settings to strengthen (or overturn) the LB result.
