@@ -42,4 +42,4 @@ notes.md             lab notebook
 - Never change macOS security settings, disable SIP, or install kernel extensions on macOS.
 - Ask before installing anything not via Homebrew, opam, or pip.
 - opam tools need `eval $(opam env)` in each shell first.
-- Repo: github.com/VaishJadhavVJ/memory-model-inference (private). Push after every commit.
+- Repo: github.com/VaishJadhavVJ/memory-model-inference (public). Push after every commit.
