@@ -369,3 +369,9 @@ The first run (2026-11-11) is consistent with it:
 - The best surviving candidate is `cand_WW0_WR0_RR0_RW1`, which preserves R->W and nothing else.
 This does not prove R->W is preserved: 0 in 50M could still mean "allowed but rare". The longer LB runs
 listed under "Next" on 2026-11-11 are the way to strengthen it.
+
+## 2026-11-12 — Check-in draft
+
+Drafted `docs/checkin.md` for Prof. Mansky: goal, progress (test suite, models, inference rules, Phase 1
+table, first M4 Arm-mode table, inference result), problems, next steps, key files, AI use. Built only from
+this notebook and the repo. About 1,100 words including tables. `docs/proposal.pdf` is not in the repo yet.
