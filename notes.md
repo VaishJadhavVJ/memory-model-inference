@@ -357,3 +357,14 @@ Every other candidate is eliminated by an observed test (SB kills W->R, 2+2W kil
 
 **Next:** fill in my predictions table and compare; run LB with many more iterations and other `-a`/stride
 settings to strengthen (or overturn) the LB result.
+
+## 2026-11-12 — First M4 Arm-mode run vs the proposal's prediction
+
+Decided to skip a separate predictions table for the M4. The prediction to test is the one already made in
+the proposal (Oct 23): the M4 in Arm mode preserves R->W order, citing Khayet and Morrison (ASPLOS 2026).
+
+The first run (2026-11-11) is consistent with it:
+- LB, the test for R->W reordering, was observed 0 times in 50M runs (also 0 in the 5M small run).
+- The best surviving candidate is `cand_WW0_WR0_RR0_RW1`, which preserves R->W and nothing else.
+This does not prove R->W is preserved: 0 in 50M could still mean "allowed but rare". The longer LB runs
+listed under "Next" on 2026-11-11 are the way to strengthen it.
