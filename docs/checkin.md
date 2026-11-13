@@ -1,6 +1,4 @@
-# CS 554 Project Check-in: Inferring the Apple M4 Memory Model
-
-For Prof. Mansky, November 12, 2026
+# Vaishnavi Jadhav (vjadh4@uic.edu), CS 554 project check-in, November 12, 2026
 
 ## 1. Goal
 
@@ -38,9 +36,9 @@ exactly when that model allows it.
 | RA | 2 | WW0_WR0_RR0_RW1 | 3: MP, S, WRC |
 | SRA | 4 | WW1_WR0_RR0_RW1 | 2: MP, WRC |
 
-SC and TSO are recovered exactly. The other three models lie outside the candidate space. Their
-leftover mismatches show what the candidates cannot express: dependencies for aarch64, and causal
-ordering without one global order of writes for RA and SRA.
+SC and TSO are recovered exactly. The other three lie outside the candidate space, and their leftover
+mismatches show what it cannot express: dependencies (aarch64) and causality without one global write
+order (RA, SRA).
 
 **Phase 2: first run on the M4 in Arm mode.** I ran natively on macOS with litmus7, 20M to 50M runs
 per test. For every test, litmus7's hash matched herd7's, so the hardware ran the tests herd7 analysed.
@@ -96,18 +94,23 @@ outcome is allowed but rare.
 - `tests/`: the 13 litmus tests.
 - `models/baselines/`: the 6 baseline models.
 - `models/candidates/`: the 16 generated candidate models.
-- `scripts/run_baselines.py`: runs herd7 with the baseline models on every test.
-- `scripts/gen_candidates.py`: writes the 16 candidate models.
-- `scripts/predict.py`: runs herd7 for every model and test, writes `results/predictions.csv`.
-- `scripts/infer.py`: ranks the candidates against an observations file.
-- `scripts/phase1.py`: builds the simulated observations for Phase 1 and runs inference on them.
-- `scripts/check_predictions.py`: 15 automatic checks on the predictions and Phase 1 results.
-- `scripts/hw_obs.py`: turns a litmus7 log into observations and checks hashes against herd7.
-- `results/hw/m4_arm/`: raw litmus7 logs from the M4.
-- `results/obs_m4_arm_inference.csv`: the candidate ranking for the M4 run.
-- `notes.md`: lab notebook with every command, result and problem.
-- `docs/proposal.pdf`: the project proposal.
+- `scripts/`: Python scripts (standard library only) for predictions, inference, checks and log parsing.
+- `results/`: herd7 predictions, Phase 1 results, raw M4 logs and the M4 inference output.
+- `docs/`: the proposal and this check-in.
 
-## 6. AI use
+## 6. Questions for you
+
+1. Scope. Is Phase 3 (TSO mode) plus the current results enough for the final, or should I go
+   deeper? I am considering two extensions and would value your view on which is more useful:
+   (a) an operational model of the inferred M4 model, written as a small OCaml program that
+   enumerates all executions of each litmus test, checked against herd7's axiomatic predictions
+   on all 13 tests, plus a paper proof that SB, 2+2W, LB and IRIW each pin down exactly one
+   ordering flag; or
+   (b) repeating the hardware runs on a non-Apple Arm core (Samsung S25 Ultra, Qualcomm Oryon).
+2. Evidence from absence. LB was never observed in 50M runs. Is it reasonable to report this
+   with a statistical bound (0 in N runs gives a 95% upper bound of about 3/N on the per-run
+   rate), or would you treat it differently?
+
+## 7. AI use
 
 I used Claude for planning and Claude Code for setup and scripts.

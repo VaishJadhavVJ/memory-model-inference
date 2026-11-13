@@ -375,3 +375,6 @@ listed under "Next" on 2026-11-11 are the way to strengthen it.
 Drafted `docs/checkin.md` for Prof. Mansky: goal, progress (test suite, models, inference rules, Phase 1
 table, first M4 Arm-mode table, inference result), problems, next steps, key files, AI use. Built only from
 this notebook and the repo. About 1,100 words including tables. `docs/proposal.pdf` is not in the repo yet.
+Revision: header with name and email, Key files reduced to folders, Phase 1 paragraph cut to 2 sentences,
+added "Questions for you" (scope: operational model vs non-Apple Arm core; reporting LB 0/50M with a 3/N
+bound). Now about 1,150 words including tables.
