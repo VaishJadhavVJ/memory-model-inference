@@ -15,6 +15,7 @@ models/candidates/   16 generated .cat files
 scripts/             Python, standard library only
 results/             CSVs and raw logs
 notes.md             lab notebook
+docs/proposal.pdf    project proposal (Oct 23)
 build/               litmus7 output (not tracked)
 ```
 

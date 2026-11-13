@@ -361,7 +361,8 @@ settings to strengthen (or overturn) the LB result.
 ## 2026-11-12 — First M4 Arm-mode run vs the proposal's prediction
 
 Decided to skip a separate predictions table for the M4. The prediction to test is the one already made in
-the proposal (Oct 23): the M4 in Arm mode preserves R->W order, citing Khayet and Morrison (ASPLOS 2026).
+the proposal (Oct 23, docs/proposal.pdf): the M4 in Arm mode preserves R->W order, citing Y. Khayet and
+A. Morrison, "Arm Weak Memory Consistency on Apple Silicon: What Is It Good For?", ASPLOS 2026.
 
 The first run (2026-11-11) is consistent with it:
 - LB, the test for R->W reordering, was observed 0 times in 50M runs (also 0 in the 5M small run).
