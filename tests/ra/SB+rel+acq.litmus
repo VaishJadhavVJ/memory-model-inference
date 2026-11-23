@@ -1,0 +1,15 @@
+AArch64 SB+rel+acq
+"PodWRLA FreAL PodWRLA FreAL"
+Generator=diyone7 (version 7.58)
+Prefetch=0:x=F,0:y=T,1:y=F,1:x=T
+Com=Fr Fr
+Orig=PodWRLA FreAL PodWRLA FreAL
+{
+0:X1=x; 0:X2=y;
+1:X1=y; 1:X2=x;
+}
+ P0           | P1           ;
+ MOV W0,#1    | MOV W0,#1    ;
+ STLR W0,[X1] | STLR W0,[X1] ;
+ LDAR W3,[X2] | LDAR W3,[X2] ;
+exists (0:X3=0 /\ 1:X3=0)

@@ -1,0 +1,16 @@
+AArch64 S+rel+acqpc
+"PodWWLL RfeLQ PodRWQL CoeLL"
+Generator=diyone7 (version 7.58)
+Prefetch=0:x=F,0:y=W,1:y=F,1:x=W
+Com=Rf Co
+Orig=PodWWLL RfeLQ PodRWQL CoeLL
+{
+0:X1=x; 0:X3=y;
+1:X0=y; 1:X3=x;
+}
+ P0           | P1            ;
+ MOV W0,#2    | LDAPR W1,[X0] ;
+ STLR W0,[X1] | MOV W2,#1     ;
+ MOV W2,#1    | STLR W2,[X3]  ;
+ STLR W2,[X3] |               ;
+exists ([x]=2 /\ 1:X1=1)

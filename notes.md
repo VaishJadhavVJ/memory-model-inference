@@ -382,3 +382,88 @@ Appendix: added "Appendix: two example files" with the exact contents of `tests/
 `models/candidates/cand_WW0_WR0_RR0_RW1.cat`, each with a GitHub link; checked both blocks are identical to
 the files (diff) and both links load. Added the repo link to the header.
 Repo made public (by me); `gh repo view` reports PUBLIC. Updated the "Repo:" line in CLAUDE.md to "public".
+
+## 2026-11-22 — Extension (requested by Prof. Mansky): release/acquire tests vs theoretical RA
+
+**LDAPR support:** `sysctl hw.optional.arm.FEAT_LRCPC` → 1 (also `FEAT_LRCPC2` → 1). The M4 has LDAPR.
+
+**Tests** in `tests/ra/` (diyone7 annotations: L = STLR, A = LDAR, Q = LDAPR; the annotation letters after a
+po edge give its source and target, e.g. `PodWWLL` = po from a release store to a release store):
+```
+cd tests/ra
+for v in "acq:A" "acqpc:Q"; do s=${v%%:*}; a=${v##*:}; L=L    # s = name suffix, a = load annotation
+diyone7 -arch AArch64 -name MP+rel+$s   PodWW$L$L Rfe$L$a PodRR$a$a Fre$a$L
+diyone7 -arch AArch64 -name SB+rel+$s   PodWR$L$a Fre$a$L PodWR$L$a Fre$a$L
+diyone7 -arch AArch64 -name LB+rel+$s   PodRW$a$L Rfe$L$a PodRW$a$L Rfe$L$a
+diyone7 -arch AArch64 -name 2+2W+rel+$s PodWW$L$L Coe$L$L PodWW$L$L Coe$L$L
+diyone7 -arch AArch64 -name S+rel+$s    PodWW$L$L Rfe$L$a PodRW$a$L Coe$L$L
+diyone7 -arch AArch64 -name WRC+rel+$s  Rfe$L$a PodRW$a$L Rfe$L$a PodRR$a$a Fre$a$L
+diyone7 -arch AArch64 -name IRIW+rel+$s Rfe$L$a PodRR$a$a Fre$a$L Rfe$L$a PodRR$a$a Fre$a$L
+done
+# e.g. MP+rel+acq is PodWWLL RfeLA PodRRAA FreAL; MP+rel+acqpc is PodWWLL RfeLQ PodRRQQ FreQL
+```
+- External edges carry annotations too (`RfeLA`, `FreAL`): needed for WRC and IRIW, whose writer threads have a
+  single store and no po edge to carry the L.
+- Checked: every store is STLR, every load is LDAR (+acq) or LDAPR (+acqpc), no plain STR/LDR left; each
+  variant's `exists` line is identical to the plain test's. 2+2W has no loads, so 2+2W+rel+acq and
+  2+2W+rel+acqpc are the same test (identical body and hash).
+
+**Predictions:** `python3 scripts/predict_ra.py` → `results/predictions_ra.csv` (5 models x 14 tests).
+- Refactored `scripts/predict.py`: the body of main() is now `predict(tests, models, out_path)`, reused by
+  `predict_ra.py`. Re-ran predict.py: predictions.csv byte-identical; check_predictions.py still all PASS.
+- Only aarch64.cat reads the annotations. ra/sra/tso/sc.cat treat every access alike, so under ra.cat every
+  access is release/acquire (theoretical RA). Their verdicts equal the plain tests' verdicts.
+
+**Expectation checks:** all PASS.
+- +rel+acq: aarch64 forbids all 7. PASS. RA allows exactly SB, 2+2W, IRIW. PASS.
+- +rel+acqpc: aarch64 allows only SB. PASS. RA allows exactly SB, 2+2W, IRIW. PASS.
+
+**Hardware run:** same settings as the Arm-mode run.
+```
+export DEVELOPER_DIR=/Library/Developer/CommandLineTools
+export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk
+litmus7 -mach M1 -a 10 -s 100k -r 10 -o build/m4_ra tests/ra/*.litmus
+cd build/m4_ra && make -j 8
+sh run.sh > ../../results/hw/m4_ra/small.log           # 4.4 s
+sh run.sh -r 100 > ../../results/hw/m4_ra/run.log      # 20M-50M per test, 18 s
+cd ../.. && python3 scripts/hw_obs.py results/hw/m4_ra/run.log results/obs_m4_ra.csv tests/ra
+```
+- No extra compiler flags needed for LDAPR: Apple clang's default target CPU on arm64 macOS is `apple-m1`,
+  which enables `+rcpc` (seen with `gcc -### -c t.c`). `otool -tv` on the binaries shows `ldapr` in the
+  +acqpc tests and `ldar` in the +acq tests.
+- `scripts/hw_obs.py` takes an optional third argument, the tests folder (default `tests/`). Re-ran it on the
+  Arm-mode log with the default: obs_m4_arm.csv unchanged.
+- Hash check: all 14 litmus7 hashes equal herd7's.
+- The small run gave the same yes/no on all 14 tests (only SB+rel+acqpc observed, 479 / 5M).
+- infer.py not run on these (the 16 candidates ignore acquire/release).
+
+| Test | aarch64 | RA | SRA | TSO | SC | M4 observed (weak / total) |
+|---|---|---|---|---|---|---|
+| MP+rel+acq | F | F | F | F | F | no (0 / 50M) |
+| SB+rel+acq | F | A | A | A | F | no (0 / 50M) |
+| LB+rel+acq | F | F | F | F | F | no (0 / 50M) |
+| 2+2W+rel+acq | F | A | F | F | F | no (0 / 50M) |
+| S+rel+acq | F | F | F | F | F | no (0 / 50M) |
+| WRC+rel+acq | F | F | F | F | F | no (0 / 30M) |
+| IRIW+rel+acq | F | A | A | F | F | no (0 / 20M) |
+| MP+rel+acqpc | F | F | F | F | F | no (0 / 50M) |
+| SB+rel+acqpc | A | A | A | A | F | yes (4655 / 50M) |
+| LB+rel+acqpc | F | F | F | F | F | no (0 / 50M) |
+| 2+2W+rel+acqpc | F | A | F | F | F | no (0 / 50M) |
+| S+rel+acqpc | F | F | F | F | F | no (0 / 50M) |
+| WRC+rel+acqpc | F | F | F | F | F | no (0 / 30M) |
+| IRIW+rel+acqpc | F | A | A | F | F | no (0 / 20M) |
+
+**Reading:**
+- aarch64 and RA disagree on 5 tests, always RA = A, aarch64 = F: SB+rel+acq, 2+2W (both variants), IRIW
+  (both variants). Arm's release/acquire is strictly stronger than theoretical RA on these tests:
+  - SB+rel+acq: on Arm an LDAR cannot pass an earlier STLR (RCsc). RA has no such rule.
+  - 2+2W: Arm has one global order of writes and STLR keeps earlier stores before it. RA lets threads
+    disagree on write order.
+  - IRIW: Arm is multi-copy atomic, so with ordered reads both readers must agree. RA lets them disagree.
+- LDAPR is weaker than LDAR in exactly one place: SB. On Arm, an LDAPR may pass an earlier STLR (RCpc), and
+  SB+rel+acqpc is the only test aarch64 allows. This is also where RA and aarch64 agree on SB.
+- The M4 matches aarch64 on all 14 tests: nothing observed that aarch64 forbids, and the one test aarch64
+  allows (SB+rel+acqpc) was observed. The M4 really treats LDAR and LDAPR differently (SB: 0 vs 4655 in 50M).
+- The M4 never showed any RA-only behaviour (SB+rel+acq, 2+2W, IRIW with release/acquire). That is soft
+  evidence: 0 in 20M-50M.

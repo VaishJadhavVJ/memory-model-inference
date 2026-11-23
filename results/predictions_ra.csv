@@ -1,0 +1,6 @@
+model,2+2W+rel+acq,2+2W+rel+acqpc,IRIW+rel+acq,IRIW+rel+acqpc,LB+rel+acq,LB+rel+acqpc,MP+rel+acq,MP+rel+acqpc,S+rel+acq,S+rel+acqpc,SB+rel+acq,SB+rel+acqpc,WRC+rel+acq,WRC+rel+acqpc
+aarch64,F,F,F,F,F,F,F,F,F,F,F,A,F,F
+ra,A,A,A,A,F,F,F,F,F,F,A,A,F,F
+sra,F,F,A,A,F,F,F,F,F,F,A,A,F,F
+tso,F,F,F,F,F,F,F,F,F,F,A,A,F,F
+sc,F,F,F,F,F,F,F,F,F,F,F,F,F,F
