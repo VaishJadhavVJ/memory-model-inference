@@ -467,3 +467,46 @@ cd ../.. && python3 scripts/hw_obs.py results/hw/m4_ra/run.log results/obs_m4_ra
   allows (SB+rel+acqpc) was observed. The M4 really treats LDAR and LDAPR differently (SB: 0 vs 4655 in 50M).
 - The M4 never showed any RA-only behaviour (SB+rel+acq, 2+2W, IRIW with release/acquire). That is soft
   evidence: 0 in 20M-50M.
+
+## 2026-11-22 — Android test package (Termux, no root) for S25 Ultra and Pixel 8
+
+**Files:** `android/build_and_run.sh` and `android/README_RUN.txt` (tracked), and
+`scripts/make_android_package.py`, which runs litmus7 on all 27 tests (tests/ and tests/ra/) into
+`build/android/`, copies the two files in and writes `build/android_tests.zip` (root folder
+`android_tests/`). build/ is gitignored, so the package and zip are not committed.
+```
+eval $(opam env)
+python3 scripts/make_android_package.py
+```
+**litmus7 options** (the phone compiles the C itself, so no cross-compiling `-mach` config such as redmi9a.cfg):
+- `-os android8`: Linux kernel with Android's C library (bionic). Compared with `-os linux`, it pins threads
+  with `sched_setaffinity(gettid(), ...)` and drops `-pthread` (bionic has threads built into libc).
+- `-affinity random`: pins every thread to its own core and reshuffles the assignment at every run, so over
+  many runs a test sees many combinations of core types (both phones mix big and small cores).
+  Not `-force_affinity`: it retries forever if a core is refused.
+- `-mem direct -st 1 -s 100k`: same as the M4 runs. `-gcc clang`: Termux has clang, not gcc.
+- `-ccopts "-O2 -march=armv8.2-a+rcpc"`: an Android-targeted clang assumes a generic Armv8.0 CPU and rejects
+  LDAPR ("instruction requires: rcpc"); `+rcpc` adds only that extension. Both phones support it.
+
+**build_and_run.sh** (POSIX sh, because Termux's `sh` is dash): checks clang and make; builds only the `.exe`
+targets (the Makefile's `.t` listings need awk); writes `uname -a`, `getprop ro.product.model`,
+`getprop ro.soc.model`, `/proc/cpuinfo` at the top of `results_<model>_<date>.txt`; runs each test with
+`-a $(nproc) -s 100000 -r R`, where R = ceil(10M / (100k x floor(nproc / threads))), so every test does at
+least 10M executions. If a test prints no Observation line (pinning refused), it reruns it with `-i 0`
+(no pinning) and records a NOTE in the results file. Copies the results to Downloads if storage is set up.
+
+**Checks done on the Mac (the phones themselves are untested):**
+- Installed the Android NDK (`brew install --cask android-ndk`) and compiled the package with its
+  `aarch64-linux-android24-clang`: all 27 tests build (only warning: unused `-D_GNU_SOURCE` at link time),
+  binaries are Android arm64 ELF (`/system/bin/linker64`), `ldapr` present in the +acqpc tests.
+- Ran build_and_run.sh under dash on a macOS build of the same 27 tests (`-os mac -affinity none`), with a
+  stand-in `nproc` and `TARGET=1000000`: all 27 run, run counts as expected, missing getprop gives "unknown".
+- Fallback: replaced SB.exe by a stub that fails unless given `-i 0`: the script reran SB without pinning and
+  wrote the NOTE.
+- `scripts/hw_obs.py` reads the results file for both folders with no code change (all hashes match herd7):
+  `python3 scripts/hw_obs.py RESULTS.txt OUT.csv` and `python3 scripts/hw_obs.py RESULTS.txt OUT_ra.csv tests/ra`.
+  Added this to its docstring.
+
+**Problem hit:** my first NDK test build failed to link because zsh does not split an unquoted `$TESTS`, so
+only the last test got `.exe` and make fell back to its built-in rule with macOS `cc`. Not a package bug:
+the script runs under sh, which splits; the rebuild under sh worked.

@@ -3,6 +3,8 @@
 Usage: python3 scripts/hw_obs.py LOG OUT.csv [TESTS_DIR]   (TESTS_DIR defaults to tests/)
 Example: python3 scripts/hw_obs.py results/hw/m4_arm/run.log results/obs_m4_arm.csv
          python3 scripts/hw_obs.py results/hw/m4_ra/run.log results/obs_m4_ra.csv tests/ra
+A phone results file from android/build_and_run.sh holds both folders' tests: run once per folder.
+Lines other than Hash= and Observation (phone details, notes) are ignored.
 
 The hash summarises a test's initial state and code. If litmus7's hash equals herd7's hash for
 the same file, the hardware ran exactly the test that herd7 analysed.

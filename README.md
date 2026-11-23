@@ -16,6 +16,7 @@ scripts/             Python, standard library only
 results/             CSVs and raw logs
 notes.md             lab notebook
 docs/proposal.pdf    project proposal (Oct 23)
+android/             Termux test package files (scripts/make_android_package.py builds the zip)
 build/               litmus7 output (not tracked)
 ```
 
