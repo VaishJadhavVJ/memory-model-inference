@@ -1,0 +1,15 @@
+test,observed,weak,total
+2+2W+rel+acq,no,0,20000000
+2+2W+rel+acqpc,no,0,20000000
+IRIW+rel+acq,no,0,20000000
+IRIW+rel+acqpc,no,0,20000000
+LB+rel+acq,no,0,20000000
+LB+rel+acqpc,no,0,20000000
+MP+rel+acq,no,0,20000000
+MP+rel+acqpc,no,0,20000000
+S+rel+acq,no,0,20000000
+S+rel+acqpc,no,0,20000000
+SB+rel+acq,no,0,20000000
+SB+rel+acqpc,yes,51,20000000
+WRC+rel+acq,no,0,20000000
+WRC+rel+acqpc,no,0,20000000

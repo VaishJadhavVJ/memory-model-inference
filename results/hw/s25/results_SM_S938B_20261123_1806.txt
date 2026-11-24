@@ -1,0 +1,584 @@
+=== uname -a
+Linux localhost 6.6.127-android15-8-p87b1ce1-abogkiS938BXXUDDZJB-4k #1 SMP PREEMPT Mon Oct 19 08:36:50 UTC 2026 aarch64 Android
+=== getprop ro.product.model
+SM-S938B
+=== getprop ro.soc.model
+SM8750
+=== cat /proc/cpuinfo
+processor	: 0
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 1
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 2
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 3
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 4
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 5
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 6
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x3
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 7
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x3
+CPU part	: 0x001
+CPU revision	: 4
+
+=== settings: nproc=8 size=100000 target=10000000 date=Mon Nov 23 18:06:59 CST 2026
+Test 2+2W+rel+acq Allowed
+Histogram (3 states)
+1068  :>[x]=1; [y]=1;
+4999384:>[x]=2; [y]=1;
+4999548:>[x]=1; [y]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ [y]=2) is NOT validated
+Hash=771226dda3f1d5092d2971175a6a5943
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWWLL CoeLL PodWWLL CoeLL
+Observation 2+2W+rel+acq Never 0 10000000
+Time 2+2W+rel+acq 0.70
+Test 2+2W+rel+acqpc Allowed
+Histogram (3 states)
+913   :>[x]=1; [y]=1;
+4999570:>[x]=2; [y]=1;
+4999517:>[x]=1; [y]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ [y]=2) is NOT validated
+Hash=771226dda3f1d5092d2971175a6a5943
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWWLL CoeLL PodWWLL CoeLL
+Observation 2+2W+rel+acqpc Never 0 10000000
+Time 2+2W+rel+acqpc 0.65
+Test 2+2W Allowed
+Histogram (3 states)
+1236  :>[x]=1; [y]=1;
+4999557:>[x]=2; [y]=1;
+4999207:>[x]=1; [y]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ [y]=2) is NOT validated
+Hash=5112e7c862483914f9d4e140b60657b2
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWW Coe PodWW Coe
+Observation 2+2W Never 0 10000000
+Time 2+2W 0.68
+Test CoRR Allowed
+Histogram (2 states)
+4999997:>1:X1=0; 1:X2=0;
+5000003:>1:X1=1; 1:X2=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X2=0) is NOT validated
+Hash=58714bf58ff46be75de27369e727776e
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=Rfe PosRR Fre
+Observation CoRR Never 0 10000000
+Time CoRR 0.62
+Test CoRW Allowed
+Histogram (3 states)
+725   :>1:X1=0; [x]=1;
+4999998:>1:X1=2; [x]=1;
+4999277:>1:X1=0; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ 1:X1=2) is NOT validated
+Hash=8a02f168b6c0e7b1ef6d936e273d58c1
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=Rfe PosRW Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: [x]=1 /\ 1:X1=2
+Observation CoRW Never 0 10000000
+Time CoRW 0.80
+Test CoWR Allowed
+Histogram (2 states)
+4999978:>0:X2=2; [x]=1;
+5000022:>0:X2=2; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ 0:X2=0) is NOT validated
+Hash=0c3e3a1070d963953cb541f321e4859c
+Generator=diyone7 (version 7.58)
+Com=Fr Co
+Orig=PosWR Fre Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: [x]=1 /\ 0:X2=0
+Observation CoWR Never 0 10000000
+Time CoWR 0.72
+Test CoWW Allowed
+Histogram (10 states)
+3581616:>0:X0=0; 0:X2=0; 0:X3=0;
+8     :>0:X0=0; 0:X2=0; 0:X3=1;
+10    :>0:X0=0; 0:X2=1; 0:X3=1;
+3190319:>0:X0=1; 0:X2=1; 0:X3=1;
+1     :>0:X0=2; 0:X2=1; 0:X3=1;
+1371  :>0:X0=2; 0:X2=2; 0:X3=1;
+24    :>0:X0=0; 0:X2=0; 0:X3=2;
+774   :>0:X0=1; 0:X2=1; 0:X3=2;
+140   :>0:X0=0; 0:X2=2; 0:X3=2;
+3225737:>0:X0=2; 0:X2=2; 0:X3=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (0:X0=1 /\ 0:X2=2 /\ 0:X3=3) is NOT validated
+Hash=c0e162dd1124a648fa39d966ac55b16a
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PosWW Coe Coe
+Fix=exists rewritten in co order; diyone7 -oneloc wrote: 0:X0=3 /\ 0:X2=1 /\ 0:X3=2
+Observation CoWW Never 0 10000000
+Time CoWW 1.73
+Test IRIW+addrs Allowed
+Histogram (15 states)
+1283101:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=0;
+73893 :>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=0;
+585257:>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=0;
+1268219:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=0;
+83015 :>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=0;
+415727:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=0;
+198673:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=0;
+712564:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=1;
+418835:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=1;
+73057 :>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=1;
+762796:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=1;
+1203760:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=1;
+180549:>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=1;
+715960:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=1;
+2024594:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0) is NOT validated
+Hash=d5e5ef8ec814571d2e5b48bc1a43e8b5
+Generator=diyone7 (version 7.58)
+Com=Rf Fr Rf Fr
+Orig=Rfe DpAddrdR Fre Rfe DpAddrdR Fre
+Observation IRIW+addrs Never 0 10000000
+Time IRIW+addrs 2.13
+Test IRIW+rel+acq Allowed
+Histogram (15 states)
+1741205:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=0;
+185842:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=0;
+622291:>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=0;
+1181712:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=0;
+211179:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=0;
+374166:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=0;
+134578:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=0;
+656918:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=1;
+402798:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=1;
+21855 :>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=1;
+578643:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=1;
+1241095:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=1;
+117841:>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=1;
+568979:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=1;
+1960898:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0) is NOT validated
+Hash=c9dbec30f103662721e8a873d23a2158
+Generator=diyone7 (version 7.58)
+Com=Rf Fr Rf Fr
+Orig=RfeLA PodRRAA FreAL RfeLA PodRRAA FreAL
+Observation IRIW+rel+acq Never 0 10000000
+Time IRIW+rel+acq 1.82
+Test IRIW+rel+acqpc Allowed
+Histogram (15 states)
+1782142:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=0;
+317265:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=0;
+716220:>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=0;
+1000150:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=0;
+281744:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=0;
+479008:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=0;
+153286:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=0;
+620582:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=1;
+464948:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=1;
+17351 :>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=1;
+605653:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=1;
+1013065:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=1;
+146175:>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=1;
+576973:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=1;
+1825438:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0) is NOT validated
+Hash=68505b36e88edc469e4224c8f3fcdf5f
+Generator=diyone7 (version 7.58)
+Com=Rf Fr Rf Fr
+Orig=RfeLQ PodRRQQ FreQL RfeLQ PodRRQQ FreQL
+Observation IRIW+rel+acqpc Never 0 10000000
+Time IRIW+rel+acqpc 1.93
+Test IRIW Allowed
+Histogram (16 states)
+1800851:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=0;
+495327:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=0;
+506997:>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=0;
+750384:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=0;
+534613:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=0;
+36956 *>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=0;
+854481:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=0;
+303032:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=0;
+502987:>1:X1=0; 1:X3=0; 3:X1=0; 3:X3=1;
+830591:>1:X1=1; 1:X3=0; 3:X1=0; 3:X3=1;
+59442 :>1:X1=0; 1:X3=1; 3:X1=0; 3:X3=1;
+290195:>1:X1=1; 1:X3=1; 3:X1=0; 3:X3=1;
+771889:>1:X1=0; 1:X3=0; 3:X1=1; 3:X3=1;
+399406:>1:X1=1; 1:X3=0; 3:X1=1; 3:X3=1;
+382704:>1:X1=0; 1:X3=1; 3:X1=1; 3:X3=1;
+1480145:>1:X1=1; 1:X3=1; 3:X1=1; 3:X3=1;
+Ok
+
+Witnesses
+Positive: 36956, Negative: 9963044
+Condition exists (1:X1=1 /\ 1:X3=0 /\ 3:X1=1 /\ 3:X3=0) is validated
+Hash=68e78de5bf12fa325b962b6ec65cdf8e
+Generator=diyone7 (version 7.58)
+Com=Rf Fr Rf Fr
+Orig=Rfe PodRR Fre Rfe PodRR Fre
+Observation IRIW Sometimes 36956 9963044
+Time IRIW 17.06
+Test LB+datas Allowed
+Histogram (3 states)
+2444  :>0:X1=0; 1:X1=0;
+4999070:>0:X1=1; 1:X1=0;
+4998486:>0:X1=0; 1:X1=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (0:X1=1 /\ 1:X1=1) is NOT validated
+Hash=e50b574668a3915fb9b2a3f456a8e841
+Generator=diyone7 (version 7.58)
+Com=Rf Rf
+Orig=DpDatadW Rfe DpDatadW Rfe
+Observation LB+datas Never 0 10000000
+Time LB+datas 0.81
+Test LB+rel+acq Allowed
+Histogram (3 states)
+3321  :>0:X1=0; 1:X1=0;
+4998165:>0:X1=1; 1:X1=0;
+4998514:>0:X1=0; 1:X1=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (0:X1=1 /\ 1:X1=1) is NOT validated
+Hash=37fc27356d8b1b4f78b5314ef6c88a55
+Generator=diyone7 (version 7.58)
+Com=Rf Rf
+Orig=PodRWAL RfeLA PodRWAL RfeLA
+Observation LB+rel+acq Never 0 10000000
+Time LB+rel+acq 0.91
+Test LB+rel+acqpc Allowed
+Histogram (3 states)
+2448  :>0:X1=0; 1:X1=0;
+4999008:>0:X1=1; 1:X1=0;
+4998544:>0:X1=0; 1:X1=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (0:X1=1 /\ 1:X1=1) is NOT validated
+Hash=71a8b557186b23488c9e221d37a59732
+Generator=diyone7 (version 7.58)
+Com=Rf Rf
+Orig=PodRWQL RfeLQ PodRWQL RfeLQ
+Observation LB+rel+acqpc Never 0 10000000
+Time LB+rel+acqpc 0.90
+Test LB Allowed
+Histogram (3 states)
+3109  :>0:X1=0; 1:X1=0;
+4998945:>0:X1=1; 1:X1=0;
+4997946:>0:X1=0; 1:X1=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (0:X1=1 /\ 1:X1=1) is NOT validated
+Hash=75efc9d3fd2408a0f1d61e2dbe4a5037
+Generator=diyone7 (version 7.58)
+Com=Rf Rf
+Orig=PodRW Rfe PodRW Rfe
+Observation LB Never 0 10000000
+Time LB 0.87
+Test MP+rel+acq Allowed
+Histogram (3 states)
+4998916:>1:X1=0; 1:X3=0;
+1781  :>1:X1=0; 1:X3=1;
+4999303:>1:X1=1; 1:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X3=0) is NOT validated
+Hash=e90d2f1a9f93405f79f6172bf6eba611
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=PodWWLL RfeLA PodRRAA FreAL
+Observation MP+rel+acq Never 0 10000000
+Time MP+rel+acq 0.78
+Test MP+rel+acqpc Allowed
+Histogram (3 states)
+4998858:>1:X1=0; 1:X3=0;
+2155  :>1:X1=0; 1:X3=1;
+4998987:>1:X1=1; 1:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X3=0) is NOT validated
+Hash=c1da82dff2c3f57bbe2d02abc6943273
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=PodWWLL RfeLQ PodRRQQ FreQL
+Observation MP+rel+acqpc Never 0 10000000
+Time MP+rel+acqpc 0.87
+Test MP Allowed
+Histogram (3 states)
+4999998:>1:X1=0; 1:X3=0;
+16    :>1:X1=0; 1:X3=1;
+4999986:>1:X1=1; 1:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X3=0) is NOT validated
+Hash=9827c55a473553b4e097483de0205966
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=PodWW Rfe PodRR Fre
+Observation MP Never 0 10000000
+Time MP 0.78
+Test S+rel+acq Allowed
+Histogram (3 states)
+938   :>1:X1=0; [x]=1;
+4999752:>1:X1=1; [x]=1;
+4999310:>1:X1=0; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ 1:X1=1) is NOT validated
+Hash=bd48c0fbf12c2cdc78a3554f6b0b1329
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=PodWWLL RfeLA PodRWAL CoeLL
+Observation S+rel+acq Never 0 10000000
+Time S+rel+acq 0.67
+Test S+rel+acqpc Allowed
+Histogram (3 states)
+2312  :>1:X1=0; [x]=1;
+4999060:>1:X1=1; [x]=1;
+4998628:>1:X1=0; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ 1:X1=1) is NOT validated
+Hash=78ee9cd9925f2216c03cf9bb0a1f305a
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=PodWWLL RfeLQ PodRWQL CoeLL
+Observation S+rel+acqpc Never 0 10000000
+Time S+rel+acqpc 0.70
+Test S Allowed
+Histogram (3 states)
+1281  :>1:X1=0; [x]=1;
+4999519:>1:X1=1; [x]=1;
+4999200:>1:X1=0; [x]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ 1:X1=1) is NOT validated
+Hash=4a8390a6db1dd4bb80b5f2347e861742
+Generator=diyone7 (version 7.58)
+Com=Rf Co
+Orig=PodWW Rfe PodRW Coe
+Observation S Never 0 10000000
+Time S 0.61
+Test SB+rel+acq Allowed
+Histogram (3 states)
+4999971:>0:X3=1; 1:X3=0;
+4999992:>0:X3=0; 1:X3=1;
+37    :>0:X3=1; 1:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (0:X3=0 /\ 1:X3=0) is NOT validated
+Hash=603d62f7917c7f1b8118dcdf57ca4e3b
+Generator=diyone7 (version 7.58)
+Com=Fr Fr
+Orig=PodWRLA FreAL PodWRLA FreAL
+Observation SB+rel+acq Never 0 10000000
+Time SB+rel+acq 0.85
+Test SB+rel+acqpc Allowed
+Histogram (4 states)
+24    *>0:X3=0; 1:X3=0;
+4999984:>0:X3=1; 1:X3=0;
+4999987:>0:X3=0; 1:X3=1;
+5     :>0:X3=1; 1:X3=1;
+Ok
+
+Witnesses
+Positive: 24, Negative: 9999976
+Condition exists (0:X3=0 /\ 1:X3=0) is validated
+Hash=a8b68f8353a814945b4b50146cbf63ca
+Generator=diyone7 (version 7.58)
+Com=Fr Fr
+Orig=PodWRLQ FreQL PodWRLQ FreQL
+Observation SB+rel+acqpc Sometimes 24 9999976
+Time SB+rel+acqpc 0.77
+Test SB Allowed
+Histogram (4 states)
+16    *>0:X3=0; 1:X3=0;
+4999992:>0:X3=1; 1:X3=0;
+4999980:>0:X3=0; 1:X3=1;
+12    :>0:X3=1; 1:X3=1;
+Ok
+
+Witnesses
+Positive: 16, Negative: 9999984
+Condition exists (0:X3=0 /\ 1:X3=0) is validated
+Hash=0e1eb22a42a7de6af162a7e5cbb4e4d3
+Generator=diyone7 (version 7.58)
+Com=Fr Fr
+Orig=PodWR Fre PodWR Fre
+Observation SB Sometimes 16 9999984
+Time SB 0.87
+Test WRC+rel+acq Allowed
+Histogram (7 states)
+2263184:>1:X1=0; 2:X1=0; 2:X3=0;
+1557690:>1:X1=1; 2:X1=0; 2:X3=0;
+629978:>1:X1=0; 2:X1=1; 2:X3=0;
+154471:>1:X1=0; 2:X1=0; 2:X3=1;
+2251722:>1:X1=1; 2:X1=0; 2:X3=1;
+2419828:>1:X1=0; 2:X1=1; 2:X3=1;
+723127:>1:X1=1; 2:X1=1; 2:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 2:X1=1 /\ 2:X3=0) is NOT validated
+Hash=a18564e8e12d8605e119135fe1dfca10
+Generator=diyone7 (version 7.58)
+Com=Rf Rf Fr
+Orig=RfeLA PodRWAL RfeLA PodRRAA FreAL
+Observation WRC+rel+acq Never 0 10000000
+Time WRC+rel+acq 1.91
+Test WRC+rel+acqpc Allowed
+Histogram (7 states)
+1911943:>1:X1=0; 2:X1=0; 2:X3=0;
+1781880:>1:X1=1; 2:X1=0; 2:X3=0;
+603391:>1:X1=0; 2:X1=1; 2:X3=0;
+136071:>1:X1=0; 2:X1=0; 2:X3=1;
+2157040:>1:X1=1; 2:X1=0; 2:X3=1;
+2619912:>1:X1=0; 2:X1=1; 2:X3=1;
+789763:>1:X1=1; 2:X1=1; 2:X3=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 2:X1=1 /\ 2:X3=0) is NOT validated
+Hash=d2602cad160ac41ece1641add01f39ff
+Generator=diyone7 (version 7.58)
+Com=Rf Rf Fr
+Orig=RfeLQ PodRWQL RfeLQ PodRRQQ FreQL
+Observation WRC+rel+acqpc Never 0 10000000
+Time WRC+rel+acqpc 1.92
+Test WRC Allowed
+Histogram (8 states)
+1920781:>1:X1=0; 2:X1=0; 2:X3=0;
+1615673:>1:X1=1; 2:X1=0; 2:X3=0;
+1524522:>1:X1=0; 2:X1=1; 2:X3=0;
+2225  *>1:X1=1; 2:X1=1; 2:X3=0;
+58907 :>1:X1=0; 2:X1=0; 2:X3=1;
+2490261:>1:X1=1; 2:X1=0; 2:X3=1;
+1719991:>1:X1=0; 2:X1=1; 2:X3=1;
+667640:>1:X1=1; 2:X1=1; 2:X3=1;
+Ok
+
+Witnesses
+Positive: 2225, Negative: 9997775
+Condition exists (1:X1=1 /\ 2:X1=1 /\ 2:X3=0) is validated
+Hash=f3fc58fce294b56b060f0bb6ccc27330
+Generator=diyone7 (version 7.58)
+Com=Rf Rf Fr
+Orig=Rfe PodRW Rfe PodRR Fre
+Observation WRC Sometimes 2225 9997775
+Time WRC 1.80

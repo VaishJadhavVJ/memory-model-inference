@@ -1,0 +1,152 @@
+=== uname -a
+Linux localhost 6.6.127-android15-8-p87b1ce1-abogkiS938BXXUDDZJB-4k #1 SMP PREEMPT Mon Oct 19 08:36:50 UTC 2026 aarch64 Android
+=== getprop ro.product.model
+SM-S938B
+=== getprop ro.soc.model
+SM8750
+=== cat /proc/cpuinfo
+processor	: 0
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 1
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 2
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 3
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 4
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 5
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x4
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 6
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x3
+CPU part	: 0x001
+CPU revision	: 4
+
+processor	: 7
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+CPU implementer	: 0x51
+CPU architecture: 8
+CPU variant	: 0x3
+CPU part	: 0x001
+CPU revision	: 4
+
+=== settings: nproc=8 size=100000 target=10000000 date=Mon Nov 23 17:24:00 CST 2026
+Test 2+2W+rel+acq Allowed
+Histogram (3 states)
+1284  :>[x]=1; [y]=1;
+4999252:>[x]=2; [y]=1;
+4999464:>[x]=1; [y]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ [y]=2) is NOT validated
+Hash=771226dda3f1d5092d2971175a6a5943
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWWLL CoeLL PodWWLL CoeLL
+Observation 2+2W+rel+acq Never 0 10000000
+Time 2+2W+rel+acq 0.55
+Test 2+2W+rel+acqpc Allowed
+Histogram (3 states)
+1228  :>[x]=1; [y]=1;
+4999567:>[x]=2; [y]=1;
+4999205:>[x]=1; [y]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ [y]=2) is NOT validated
+Hash=771226dda3f1d5092d2971175a6a5943
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWWLL CoeLL PodWWLL CoeLL
+Observation 2+2W+rel+acqpc Never 0 10000000
+Time 2+2W+rel+acqpc 0.58
+=== NOTE: 2+2W failed with thread pinning, output:
+sched_setaffinity: Unknown error -1
+=== NOTE: 2+2W rerun without pinning (-i 0)
+Warning: avail=8, available=6
+Test 2+2W Allowed
+Histogram (3 states)
+203   :>[x]=1; [y]=1;
+4999879:>[x]=2; [y]=1;
+4999918:>[x]=1; [y]=2;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists ([x]=2 /\ [y]=2) is NOT validated
+Hash=5112e7c862483914f9d4e140b60657b2
+Generator=diyone7 (version 7.58)
+Com=Co Co
+Orig=PodWW Coe PodWW Coe
+Observation 2+2W Never 0 10000000
+Time 2+2W 0.64
+=== NOTE: CoRR failed with thread pinning, output:
+Warning: avail=8, available=6
+sched_setaffinity: Unknown error -1
+=== NOTE: CoRR rerun without pinning (-i 0)
+Warning: avail=8, available=4
+Test CoRR Allowed
+Histogram (2 states)
+4999998:>1:X1=0; 1:X2=0;
+5000002:>1:X1=1; 1:X2=1;
+No
+
+Witnesses
+Positive: 0, Negative: 10000000
+Condition exists (1:X1=1 /\ 1:X2=0) is NOT validated
+Hash=58714bf58ff46be75de27369e727776e
+Generator=diyone7 (version 7.58)
+Com=Rf Fr
+Orig=Rfe PosRR Fre
+Observation CoRR Never 0 10000000
+Time CoRR 671.48

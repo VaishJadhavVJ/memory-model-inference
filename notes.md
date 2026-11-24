@@ -510,3 +510,95 @@ least 10M executions. If a test prints no Observation line (pinning refused), it
 **Problem hit:** my first NDK test build failed to link because zsh does not split an unquoted `$TESTS`, so
 only the last test got `.exe` and make fell back to its built-in rule with macOS `cc`. Not a package bug:
 the script runs under sh, which splits; the rebuild under sh worked.
+
+## 2026-11-23 — Samsung S25 Ultra results (Termux package)
+
+**Files** (copied from `termux/`, which is left untracked): `results/hw/s25/trial1_incomplete.txt`
+(run started 17:24, 4 tests), `results/hw/s25/results_SM_S938B_20261123_1803.txt` and `..._1806.txt` (27 tests each).
+
+**Phone** (identical header in all three files):
+- Model `SM-S938B`, SoC `SM8750`.
+- Kernel: `Linux localhost 6.6.127-android15-8-p87b1ce1-abogkiS938BXXUDDZJB-4k #1 SMP PREEMPT Mon Oct 19
+  08:36:50 UTC 2026 aarch64 Android`.
+- CPUs: 8 (`nproc=8`), all implementer 0x51, part 0x001, revision 4. CPUs 0-5: variant 0x4; CPUs 6-7:
+  variant 0x3. So two core types, 6 + 2. Features include `lrcpc` and `ilrcpc` (LDAPR is supported).
+
+**NOTE lines (pinning / core limits):** none in runs 1803 and 1806. In the incomplete trial (17:24):
+```
+=== NOTE: 2+2W failed with thread pinning, output:
+sched_setaffinity: Unknown error -1
+=== NOTE: 2+2W rerun without pinning (-i 0)
+Warning: avail=8, available=6
+=== NOTE: CoRR failed with thread pinning, output:
+Warning: avail=8, available=6
+sched_setaffinity: Unknown error -1
+=== NOTE: CoRR rerun without pinning (-i 0)
+Warning: avail=8, available=4
+```
+Android shrank the cores the app may use (8 -> 6 -> 4) and refused pinning. CoRR then took 671 s (other
+tests: about 0.6 s). The trial is kept for the record only and is not used below.
+
+**Overlap check:** run 1803's settings line says 18:03:06 and its 27 Time lines sum to 28.19 s, so it
+finished about 18:03:35. Run 1806's settings line says 18:06:59 (3 min 53 s later; the settings line is
+written after the build, and the file name shows the script started in the 18:06 minute). No overlap; run
+1806 is not tainted. (Run 1806's Time lines sum to 44.86 s, slower than 1803.)
+
+**Hashes:** `hw_obs.py` on both runs, tests/ and tests/ra/: 27/27 hashes match herd7 in each run.
+Per-run CSVs: `results/hw/s25/obs_1803.csv`, `obs_1803_ra.csv`, `obs_1806.csv`, `obs_1806_ra.csv`.
+
+**Run comparison** (new `scripts/combine_obs.py OUT RUN1 RUN2 ...`: prints the runs side by side, sums the
+counts only if every run agrees on seen/never for every test, otherwise lists the disagreements and writes
+nothing):
+- tests/: **disagree on MP**: 6 / 10M in run 1803 (genuine: the starred histogram state has count 6),
+  0 / 10M in run 1806. Every other test agrees. **`results/obs_s25.csv` not written.**
+- tests/ra/: agree on all 14 (only SB+rel+acqpc seen, 27 and 24). Wrote `results/obs_s25_ra.csv` (summed).
+- Run-to-run variation is large even where the runs agree: WRC 3 vs 2225, IRIW 51134 vs 36956.
+
+**Inference** (on each run separately, since obs_s25.csv was not written):
+- Both runs: the same 4 survivors in the same order. Best fit `cand_WW1_WR0_RR0_RW1` (W->W and R->W
+  preserved): 1 mismatch (IRIW+addrs) in run 1803, 2 (IRIW+addrs, MP) in run 1806.
+- Then `cand_WW0_WR0_RR0_RW1`, `cand_WW1_WR0_RR0_RW0`, `cand_WW0_WR0_RR0_RW0`.
+- MP cannot eliminate any candidate here (every survivor has R->R off); it only adds a mismatch.
+- Outputs: `results/hw/s25/obs_1803_inference.csv`, `obs_1806_inference.csv`.
+
+**All 27 tests: aarch64 vs M4 vs S25**
+
+| Test | aarch64 | M4 | S25 run 1803 | S25 run 1806 | Flag |
+|---|---|---|---|---|---|
+| 2+2W | A | 126 / 50M | 0 / 10M | 0 / 10M | M4 seen, S25 never |
+| CoRR | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| CoRW | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| CoWR | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| CoWW | F | 0 / 30M | 0 / 10M | 0 / 10M | |
+| IRIW | A | 31177 / 20M | 51134 / 10M | 36956 / 10M | |
+| IRIW+addrs | F | 0 / 20M | 0 / 10M | 0 / 10M | |
+| LB | A | 0 / 50M | 0 / 10M | 0 / 10M | |
+| LB+datas | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| MP | A | 456 / 50M | 6 / 10M | 0 / 10M | M4 seen, S25 seen in run 1803 only |
+| S | A | 29 / 50M | 0 / 10M | 0 / 10M | M4 seen, S25 never |
+| SB | A | 2255 / 50M | 19 / 10M | 16 / 10M | |
+| WRC | A | 106 / 30M | 3 / 10M | 2225 / 10M | |
+| 2+2W+rel+acq | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| 2+2W+rel+acqpc | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| IRIW+rel+acq | F | 0 / 20M | 0 / 10M | 0 / 10M | |
+| IRIW+rel+acqpc | F | 0 / 20M | 0 / 10M | 0 / 10M | |
+| LB+rel+acq | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| LB+rel+acqpc | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| MP+rel+acq | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| MP+rel+acqpc | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| S+rel+acq | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| S+rel+acqpc | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| SB+rel+acq | F | 0 / 50M | 0 / 10M | 0 / 10M | |
+| SB+rel+acqpc | A | 4655 / 50M | 27 / 10M | 24 / 10M | |
+| WRC+rel+acq | F | 0 / 30M | 0 / 10M | 0 / 10M | |
+| WRC+rel+acqpc | F | 0 / 30M | 0 / 10M | 0 / 10M | |
+
+**Reading:**
+- Nothing the S25 showed is forbidden by aarch64.
+- M4 vs S25 seen/never differ on 2+2W, S (M4 seen, S25 never in 20M) and MP (seen in one S25 run only).
+- Like the M4, the S25 never showed LB, and it treats LDAR and LDAPR differently (SB+rel+acq 0, SB+rel+acqpc
+  seen).
+- Unlike the M4, it never showed 2+2W or S, so its best fit also keeps W->W. Soft evidence: 20M runs over two
+  runs, and rates vary a lot between runs (WRC 3 vs 2225).
+
+**Open question for me:** how to treat MP (seen in one run, not the other) before combining tests/.
