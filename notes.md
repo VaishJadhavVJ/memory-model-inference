@@ -602,3 +602,25 @@ nothing):
   runs, and rates vary a lot between runs (WRC 3 vs 2225).
 
 **Open question for me:** how to treat MP (seen in one run, not the other) before combining tests/.
+
+## 2026-11-23 — S25: combining rule changed, MP counted as observed
+
+Decision (mine), answering the open question above: MP counts as observed. One observation is hard evidence
+that the hardware allows the outcome; absence in one run is soft (CLAUDE.md inference rules).
+
+- `scripts/combine_obs.py` now always writes the combined file: weak and total are summed, a test is observed
+  if any run saw it, and tests seen in some runs only are listed ("Seen in some runs only (counted as
+  observed): [...]") instead of stopping.
+- `python3 scripts/combine_obs.py results/obs_s25.csv results/hw/s25/obs_1803.csv results/hw/s25/obs_1806.csv`
+  → lists `['MP']`; wrote `results/obs_s25.csv` (20M per test; MP yes, 6 / 20M).
+  Re-ran it for tests/ra: `results/obs_s25_ra.csv` byte-identical (the runs agreed there).
+- `python3 scripts/infer.py results/obs_s25.csv` → `results/obs_s25_inference.csv`, 4 of 16 survive:
+  - `cand_WW1_WR0_RR0_RW1` (W->W and R->W preserved): 1 mismatch (IRIW+addrs)
+  - `cand_WW0_WR0_RR0_RW1`: 3 (2+2W, IRIW+addrs, S)
+  - `cand_WW1_WR0_RR0_RW0`: 4 (IRIW+addrs, LB, LB+datas, S)
+  - `cand_WW0_WR0_RR0_RW0`: 5 (2+2W, IRIW+addrs, LB, LB+datas, S)
+  Same as run 1803 alone, since the combined observed set equals run 1803's.
+
+**Next:** 3 more S25 runs with the same package (5 runs x 10M = 50M per test, matching the M4). Add each the
+same way: copy to `results/hw/s25/`, check NOTE lines and overlap, `hw_obs.py` for tests/ and tests/ra/,
+then `combine_obs.py` over all complete runs, then `infer.py`.

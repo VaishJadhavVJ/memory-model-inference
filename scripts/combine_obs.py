@@ -2,9 +2,9 @@
 
 Usage: python3 scripts/combine_obs.py OUT.csv RUN1.csv RUN2.csv [...]
 
-Prints each test's weak/total per run. If every run agrees on observed yes/no for every test,
-writes OUT.csv with the weak and total counts summed. Otherwise lists the disagreements and
-writes nothing.
+Prints each test's weak/total per run and writes OUT.csv with the weak and total counts summed.
+A test counts as observed if any run saw it: an observation is hard evidence, absence is soft.
+Tests seen in some runs but not others are listed, so the disagreement stays visible.
 """
 import csv
 import sys
@@ -34,7 +34,7 @@ def main():
         if len(seen) > 1:
             disagree.append(test)
     if disagree:
-        raise SystemExit(f"Runs disagree on seen/never for {disagree}; {out_path} not written")
+        print(f"Seen in some runs only (counted as observed): {disagree}")
 
     with open(out_path, "w", newline="") as f:
         writer = csv.writer(f, lineterminator="\n")
