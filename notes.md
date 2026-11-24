@@ -624,3 +624,36 @@ that the hardware allows the outcome; absence in one run is soft (CLAUDE.md infe
 **Next:** 3 more S25 runs with the same package (5 runs x 10M = 50M per test, matching the M4). Add each the
 same way: copy to `results/hw/s25/`, check NOTE lines and overlap, `hw_obs.py` for tests/ and tests/ra/,
 then `combine_obs.py` over all complete runs, then `infer.py`.
+
+## 2026-11-23 — Operational model (Prof. Mansky's extension (a))
+
+**docs/opmodel.md** (filled in my outline): "shared whiteboard" machine. State = one shared memory
+(multi-copy atomic) + per thread its registers and its unfinished instructions in program order.
+Parameters = the 4 candidate flags. A load/store may perform unless an earlier unfinished instruction of
+the same thread touches the same location or the matching flag is set (R->R/W->R for loads, W->W/R->W for
+stores). No store forwarding: irrelevant here, since the only thread that reads its own write is CoWR's P0,
+a single-location test. Hand simulations for candidate 0001: SB and MP runs reaching the weak outcome; LB
+impossible (P0's load would have to precede itself through the R->W waits); CoRR impossible (same-location
+loads stay in order and x is never reset to 0).
+
+**scripts/opmodel.py:** the 13 tests as Python data (no litmus parser; MOVs folded into store values;
+LB+datas and IRIW+addrs keep only loads and stores, since the machine ignores dependencies). Depth-first
+search over every order of steps, skipping states already seen, collecting final states over the
+condition's variables. For each of the 16 candidates x 13 tests, compares with the full `States` list from
+herd7 on the candidate .cat file.
+```
+eval $(opam env)
+python3 scripts/opmodel.py      # 1.6 s
+```
+**Result:** 208 of 208 (candidate, test) pairs have identical final-state sets (1556 states on each side).
+`results/opmodel_check.csv` (candidate, test, herd_states, machine_states, match, only_herd, only_machine).
+
+**Checks of the check:** removing the same-location rule makes CoRR differ from herd7; swapping the W->R and
+R->W flags makes SB and LB differ (done in memory, file not changed). Replayed the doc's SB and MP step
+sequences with the machine's own functions: every step allowed, weak outcomes reached; LB and CoRR weak
+outcomes unreachable under 0001, and the blocked first steps claimed in the doc are indeed blocked.
+
+**Known limits (no effect on the 13 tests):** dependencies ignored (as in the candidates); the machine
+orders all accesses, including same-location pairs and reads of own stores, in one global order, while the
+candidates check `uniproc` and `global` separately, so the candidates could be weaker on tests that mix
+repeated accesses to one location with other locations.
