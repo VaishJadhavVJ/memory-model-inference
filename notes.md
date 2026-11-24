@@ -657,3 +657,34 @@ outcomes unreachable under 0001, and the blocked first steps claimed in the doc 
 orders all accesses, including same-location pairs and reads of own stores, in one global order, while the
 candidates check `uniproc` and `global` separately, so the candidates could be weaker on tests that mix
 repeated accesses to one location with other locations.
+
+## 2026-11-23 — Our operational model vs Arm's Flat (Pulte et al., POPL 2018)
+
+**rmem install attempt (about 15 minutes, stopped):**
+- `opam show rmem`: not in the default opam repository. The rmem README installs it with
+  `opam switch create opam-4.11.2-for-rmem 4.11.2`, the REMS opam repository and `opam install rmem`.
+- `opam switch create rmem-4.11.2 4.11.2 --no-switch` failed at once: OCaml 4.11.2 has
+  `available: !(os = "macos" & arch = "arm64")`.
+- rmem 0.1's opam file (REMS repository, branch opam2) needs `lwt` {>= 4.1.0 & <= 4.5.0} and `sail` 0.14;
+  `lwt.4.5.0` needs `ocaml < 4.12`. opam only offers OCaml >= 4.12 on Apple Silicon, so there is no
+  supported combination on this Mac. Did not override the constraints (rmem would be built against
+  library versions it was never tested with).
+- Cleanup checked: the failed switch was removed; `opam switch list` shows only `default`, and the REMS
+  repository was never added.
+- Possible later route: the Ubuntu ARM64 VM planned for Phase 3, where OCaml 4.11.2 is available.
+
+**Web interface fallback:** read the RMEM page's HTML/JS for the exact labels (Model -> Storage model ->
+Flat; Load litmus -> Load from file... / box + OK; Search -> Search exhaustively). Step-by-step instructions
+for LB, LB+datas, IRIW, IRIW+addrs, MP are at the end of `docs/flat_comparison.md`, with a table to fill in.
+
+**docs/flat_comparison.md:** 13-test table (machine 0001, machine 1001, aarch64.cat as the Flat stand-in,
+M4, S25 20M), built from predictions.csv (machine = candidates, 208/208) and the obs CSVs.
+- 0001 differs from aarch64 on LB (R->W rule) and IRIW+addrs (no dependency tracking).
+- 1001 differs on 2+2W, S (W->W rule), LB and IRIW+addrs.
+- LB+datas: everyone forbids it, but our machines for the R->W rule, Flat because of the data dependency.
+- Plus what Flat models that we do not (speculative out-of-order execution, dependencies through real
+  instruction semantics, restarts/discards, store forwarding, barriers and acquire/release) and what both
+  share (one flat multi-copy-atomic memory, same-location order kept).
+
+**.gitignore:** added `termux/` (the three files there are byte-identical to the tracked copies in
+results/hw/s25/, checked with cmp).

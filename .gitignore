@@ -10,3 +10,6 @@ build/
 *.exe
 *.o
 *.t
+
+# Copies of phone result files sent over from Termux (tracked copies live in results/hw/)
+termux/
