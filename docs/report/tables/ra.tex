@@ -1,0 +1,20 @@
+\begin{tabular}{lccccccrr}
+\toprule
+Test & aarch64 & RA & SRA & TSO & SC &  & M4 (weak / runs) & S25 (weak / runs) \\
+\midrule
+MP+rel+acq & F & F & F & F & F &  & 0 / 50M & 0 / 20M \\
+SB+rel+acq & F & A & A & A & F &  & 0 / 50M & 0 / 20M \\
+LB+rel+acq & F & F & F & F & F &  & 0 / 50M & 0 / 20M \\
+2+2W+rel+acq & F & A & F & F & F &  & 0 / 50M & 0 / 20M \\
+S+rel+acq & F & F & F & F & F &  & 0 / 50M & 0 / 20M \\
+WRC+rel+acq & F & F & F & F & F &  & 0 / 30M & 0 / 20M \\
+IRIW+rel+acq & F & A & A & F & F &  & 0 / 20M & 0 / 20M \\
+MP+rel+acqpc & F & F & F & F & F &  & 0 / 50M & 0 / 20M \\
+SB+rel+acqpc & A & A & A & A & F &  & 4,655 / 50M & 51 / 20M \\
+LB+rel+acqpc & F & F & F & F & F &  & 0 / 50M & 0 / 20M \\
+2+2W+rel+acqpc & F & A & F & F & F &  & 0 / 50M & 0 / 20M \\
+S+rel+acqpc & F & F & F & F & F &  & 0 / 50M & 0 / 20M \\
+WRC+rel+acqpc & F & F & F & F & F &  & 0 / 30M & 0 / 20M \\
+IRIW+rel+acqpc & F & A & A & F & F &  & 0 / 20M & 0 / 20M \\
+\bottomrule
+\end{tabular}

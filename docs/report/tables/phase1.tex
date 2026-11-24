@@ -1,0 +1,11 @@
+\begin{tabular}{llll}
+\toprule
+Truth & Survivors & Best candidate (unique) & Mismatches \\
+\midrule
+SC & 16 & \texttt{cand\_WW1\_WR1\_RR1\_RW1} & 0 \\
+TSO & 8 & \texttt{cand\_WW1\_WR0\_RR1\_RW1} & 0 \\
+Arm (aarch64.cat) & 1 & \texttt{cand\_WW0\_WR0\_RR0\_RW0} & 2: IRIW+addrs, LB+datas \\
+RA & 2 & \texttt{cand\_WW0\_WR0\_RR0\_RW1} & 3: MP, S, WRC \\
+SRA & 4 & \texttt{cand\_WW1\_WR0\_RR0\_RW1} & 2: MP, WRC \\
+\bottomrule
+\end{tabular}

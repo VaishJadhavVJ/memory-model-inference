@@ -720,3 +720,24 @@ Registers appear as `R1` (for X1/W1), values in hex.
 **Problem:** RMEM's console keeps earlier output when a new test is loaded, so my first LB+datas and
 IRIW+addrs attempts showed stale results from the previous test. Reloaded the page before each test and
 reran those two.
+
+## 2026-11-23 — Final report skeleton (docs/report/, Overleaf-ready LaTeX)
+
+- `docs/report/main.tex` (article, 11pt, 0.75in margins, booktabs, listings, blue links) and `refs.bib`.
+  Sections 1-11 as planned plus appendix (full prediction tables, LB.litmus and the 0001 candidate).
+  Compiles with `latexmk -pdf` (pdflatex + bibtex): 11 pages, body through page 8, appendix pages 9-11; no
+  errors, no overfull boxes, no undefined references; no em or en dashes in the sources.
+- Every TODO for me is a red box (`\TODOme{...}`) with a `% TODO(me)` comment above it (7 boxes: intro,
+  hardware interpretation, release/acquire interpretation, machine explanation, plan-table check, AI-use
+  check), plus `TODO(me)` cells in the plan table (Phase 3, Pixel 8, LB stress test, extra S25 runs, paper
+  proof). Search main.tex for "TODO(me)".
+- New `scripts/report_tables.py`: writes all tables in `docs/report/tables/` from the result CSVs (Phase 1,
+  hardware, survivors, release/acquire, Flat, full predictions, plus `numbers.tex` with the 208/208 and
+  1,556-state counts) and copies the RMEM figure and the two example files into the report folder.
+  Flat verdicts are the only hard-coded values (from this notebook, 2026-11-23). **Rerun it after the three
+  extra S25 runs**, then update the S25 prose.
+- Facts stated in the prose were checked against the CSVs first: both chips match aarch64 on all 14
+  release/acquire tests; whenever ra.cat forbids, aarch64.cat forbids; aarch64 forbids 5 tests RA allows.
+- docs/proposal.pdf is still not in the repo, so the intro hints and the plan table come from CLAUDE.md, the
+  check-in and this notebook; the report says to check them against the proposal.
+- `.gitignore`: added `cs554_ss/` (raw RMEM screenshots; the ones used are in docs/figures/rmem/).

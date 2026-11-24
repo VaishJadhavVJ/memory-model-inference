@@ -13,3 +13,6 @@ build/
 
 # Copies of phone result files sent over from Termux (tracked copies live in results/hw/)
 termux/
+
+# RMEM screenshots as taken (the ones used are copied into docs/figures/rmem/)
+cs554_ss/

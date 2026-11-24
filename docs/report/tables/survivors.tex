@@ -1,0 +1,13 @@
+\begin{tabular}{lllp{0.38\linewidth}}
+\toprule
+Chip & Surviving candidate & Mismatches & Mismatched tests \\
+\midrule
+M4 & \texttt{cand\_WW0\_WR0\_RR0\_RW1} & 1 & IRIW+addrs \\
+M4 & \texttt{cand\_WW0\_WR0\_RR0\_RW0} & 3 & IRIW+addrs, LB, LB+datas \\
+\midrule
+S25 & \texttt{cand\_WW1\_WR0\_RR0\_RW1} & 1 & IRIW+addrs \\
+S25 & \texttt{cand\_WW0\_WR0\_RR0\_RW1} & 3 & 2+2W, IRIW+addrs, S \\
+S25 & \texttt{cand\_WW1\_WR0\_RR0\_RW0} & 4 & IRIW+addrs, LB, LB+datas, S \\
+S25 & \texttt{cand\_WW0\_WR0\_RR0\_RW0} & 5 & 2+2W, IRIW+addrs, LB, LB+datas, S \\
+\bottomrule
+\end{tabular}
