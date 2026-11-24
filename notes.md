@@ -688,3 +688,35 @@ M4, S25 20M), built from predictions.csv (machine = candidates, 208/208) and the
 
 **.gitignore:** added `termux/` (the three files there are byte-identical to the tracked copies in
 results/hw/s25/, checked with cmp).
+
+## 2026-11-23 — Flat (RMEM web interface) results
+
+**Run by me** in the RMEM web interface (storage model Flat, exhaustive search), on LB, MP, IRIW, LB+datas,
+IRIW+addrs:
+
+| Test | aarch64.cat | Flat | RMEM output |
+|---|---|---|---|
+| LB | A | A | weak state marked `*>` (States 4) |
+| MP | A | A | `*>1:R1=0x1; 1:R3=0x0;` |
+| IRIW | A | A | weak state marked `*>` |
+| LB+datas | F | F | States 3 of 4, no `*>` |
+| IRIW+addrs | F | F | States 15 of 16, no `*>` |
+
+**Flat matches aarch64.cat on all five.** Filled in `docs/flat_comparison.md` (status, results table with
+screenshot links, how to read RMEM output, problems; step 6 of the instructions now says to reload the page).
+
+**Screenshots** in `docs/figures/rmem/` (copied from `cs554_ss/`, byte-identical, checked with cmp):
+- `flat_LB.png` <- `LB_litmus_console.png`; `flat_MP.png` <- `MP_litmus_all.png`.
+- `flat_IRIW.png` <- `IRIW_console.png`, `flat_LB+datas.png` <- `LB_datas.png`, `flat_IRIW+addrs.png` <-
+  `IRIW_addrs.png`. The screenshots I first named (7.26.01, 7.28.05, 7.29.49 PM) were not on disk. The files
+  used were captured at 7:26:42, 7:28:48 and 7:30:17 PM (Spotlight kMDItemContentCreationDate). Opened them
+  before copying: each console starts with `search exhaustive`, the Sources pane shows the matching test,
+  and LB+datas / IRIW+addrs read States 3 / States 15, so they are not stale. Used them (my decision).
+
+**How to read RMEM output:** `States N` = number of distinct final states; a state line starting with `*>`
+satisfies the `exists` condition (weak outcome reachable = allowed), `:>` does not. No `*>` line = forbidden.
+Registers appear as `R1` (for X1/W1), values in hex.
+
+**Problem:** RMEM's console keeps earlier output when a new test is loaded, so my first LB+datas and
+IRIW+addrs attempts showed stale results from the previous test. Reloaded the page before each test and
+reran those two.

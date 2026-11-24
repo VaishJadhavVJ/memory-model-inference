@@ -5,19 +5,21 @@ Sewell ("Simplifying ARM Concurrency: Multicopy-atomic Axiomatic and Operational
 POPL 2018). The rmem tool implements it. This file compares Flat with our "shared whiteboard" machine
 (docs/opmodel.md) on our 13 tests.
 
-## Status: Flat results still to be run by hand
+## Status: Flat run by hand on five tests, matches aarch64.cat on all five
 rmem could not be installed on this Mac. Its opam package (rmem 0.1) needs `lwt` 4.5.0 or older, which
-only builds on OCaml older than 4.12, and opam does not offer OCaml older than 4.12 on Apple Silicon. So
-the "Arm" column below uses herd7's `aarch64.cat`, Arm's axiomatic model. The paper develops Flat
-together with Arm's axiomatic model, so we expect Flat to give the same answers on these tests. The hand
-runs at the end of this file check that for the five tests where it matters most.
+only builds on OCaml older than 4.12, and opam does not offer OCaml older than 4.12 on Apple Silicon.
+So we ran Flat in the RMEM web interface (storage model Flat, exhaustive search) on the five tests where
+our machines and Arm's model can disagree: LB, LB+datas, IRIW, IRIW+addrs and MP. Flat agreed with
+herd7's `aarch64.cat` on all five (table and screenshots at the end of this file). For the other eight
+tests the "Arm" column below is `aarch64.cat` alone. The paper develops Flat together with Arm's
+axiomatic model, so we expect the same answers there too, but we have not checked them.
 
 ## Results on the 13 tests
 A = weak outcome allowed, F = forbidden. Bold = differs from the Arm column. The machine columns equal
 the axiomatic candidates with the same flags: `scripts/opmodel.py` found identical final states for all
 16 candidates on all 13 tests. Hardware columns: weak outcomes / runs (S25: two runs of 10M combined).
 
-| Test | Machine 0001 (M4 fit) | Machine 1001 (S25 fit) | Arm: aarch64.cat (Flat stand-in) | M4 | S25 |
+| Test | Machine 0001 (M4 fit) | Machine 1001 (S25 fit) | Arm: aarch64.cat (= Flat on the 5 tests run) | M4 | S25 |
 |---|---|---|---|---|---|
 | 2+2W | A | **F** | A | 126 / 50M | 0 / 20M |
 | CoRR | F | F | F | 0 / 50M | 0 / 20M |
@@ -90,13 +92,33 @@ Machine 0001 keeps only R->W order. Machine 1001 keeps W->W and R->W.
 5. Read the result in the console. It lists the final states found. The weak outcome is allowed exactly
    when the state in the test's `exists` line is among them. If it prints an `Observation` line, as herd7
    does, `Sometimes` means allowed and `Never` means forbidden.
-6. Repeat steps 3 to 5 for `LB+datas`, `IRIW`, `IRIW+addrs` and `MP`, checking under **Model** that Flat is
-   still selected.
+6. Reload the page, then repeat steps 2 to 5 for `LB+datas`, `IRIW`, `IRIW+addrs` and `MP`. Reloading
+   matters: the console keeps the previous test's output (see Problems below).
 
-| Test | aarch64.cat | Flat (RMEM web) |
-|---|---|---|
-| LB | A | to do |
-| LB+datas | F | to do |
-| IRIW | A | to do |
-| IRIW+addrs | F | to do |
-| MP | A | to do |
+### Results (RMEM web interface, storage model Flat, exhaustive search)
+
+| Test | aarch64.cat | Flat (RMEM web) | What RMEM showed | Screenshot |
+|---|---|---|---|---|
+| LB | A | A | 4 states; the weak state is marked `*>` | [flat_LB.png](figures/rmem/flat_LB.png) |
+| LB+datas | F | F | `States 3` of 4; no `*>` state | [flat_LB+datas.png](figures/rmem/flat_LB+datas.png) |
+| IRIW | A | A | weak state marked `*>` (highlighted) | [flat_IRIW.png](figures/rmem/flat_IRIW.png) |
+| IRIW+addrs | F | F | `States 15` of 16; no `*>` state | [flat_IRIW+addrs.png](figures/rmem/flat_IRIW+addrs.png) |
+| MP | A | A | `*>1:R1=0x1; 1:R3=0x0;` | [flat_MP.png](figures/rmem/flat_MP.png) |
+
+Flat matches aarch64.cat on all five tests.
+
+### How to read RMEM output
+- After an exhaustive search, the console prints `States N`, the number of different final states found,
+  then one line per final state.
+- A state line starting with `*>` satisfies the test's `exists` condition: the weak outcome is reachable,
+  so the test is allowed. A line starting with `:>` does not satisfy it.
+- No `*>` line means the weak outcome is forbidden. A quick check: LB+datas has 4 possible combinations of
+  `0:R1` and `1:R1`, and RMEM found only 3; IRIW+addrs has 16 combinations and RMEM found 15. In both, the
+  missing one is the weak outcome.
+- RMEM names registers `R1`, `R3` where the test says `X1`/`W1`, `X3`/`W3`, and prints values in hex
+  (`0x1`). The long string after `via` records the sequence of choices that reaches that state.
+
+### Problems
+RMEM's console keeps the output of earlier tests when a new test is loaded. The first LB+datas and
+IRIW+addrs attempts therefore showed stale results from the previous test. We reloaded the page before
+each test and reran those two; the results above are from the reruns.
